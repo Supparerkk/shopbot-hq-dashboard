@@ -23,7 +23,7 @@
 
     body {
       background-color: #03030f;
-      background-image: url('./background.jpg?v=7');
+      background-image: url('./background.jpg?v=8');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -479,30 +479,20 @@
     /* ==========================================================================
        3. CENTER CHARACTERS WALKING ZONE
        ========================================================================== */
-    #floor-zone {
+     #floor-zone {
       position: absolute;
-      top: 58%;
-      height: 24%;
+      top: 0;
       left: 0;
       width: 100%;
-      z-index: 50;
-      overflow: visible;
-      pointer-events: none;
-    }
-
-    #walking-track {
-      position: absolute;
-      left: 296px;
-      width: calc(100vw - 592px);
       height: 100%;
-      overflow: visible;
+      z-index: 50;
+      overflow: hidden;
+      pointer-events: none;
     }
 
     .agent-character {
       position: absolute;
-      bottom: 0;
-      width: 94px;
-      height: 140px;
+      transform: translate(-50%, -100%);
       cursor: pointer;
       pointer-events: auto;
       transform-origin: bottom center;
@@ -530,15 +520,13 @@
       font-size: 10px;
       color: #fff;
       font-weight: bold;
-      font-family: 'Share Tech Mono', monospace;
+      font-family: 'Outfit', sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     /* Sprite Wrapper */
     .character-visual-box {
-      width: 94px;
-      height: 140px;
       display: flex;
       justify-content: center;
       align-items: flex-end;
@@ -546,118 +534,40 @@
     }
 
     .sprite-img {
-      height: 140px;
       width: auto;
       object-fit: contain;
       transform-origin: bottom center;
       display: block;
+      transition: filter 0.2s;
     }
 
-    /* CSS TranslateX walking cycles (position outer container, flip inner img) */
-    .walk-supervisor { 
-      --walk-start: 0px; 
-      --walk-end: calc((100vw - 592px - 94px) * 0.6); 
-      animation: walk-pos-anim 26s linear infinite; 
-      animation-delay: 0s; 
+    /* Waddle & Breath (Managed by idle-state class) */
+    .agent-character:not(.idle-state):not(.hover-paused) .character-visual-box {
+      animation: waddle-action 0.6s infinite alternate ease-in-out;
     }
-    .walk-productFinder { 
-      --walk-start: calc((100vw - 592px - 94px) * 0.2); 
-      --walk-end: calc((100vw - 592px - 94px) * 0.8); 
-      animation: walk-pos-anim 32s linear infinite; 
-      animation-delay: 1.5s; 
-    }
-    .walk-clipSelector { 
-      --walk-start: calc((100vw - 592px - 94px) * 0.05); 
-      --walk-end: calc((100vw - 592px - 94px) * 0.55); 
-      animation: walk-pos-anim 24s linear infinite; 
-      animation-delay: 3s; 
-    }
-    .walk-videoMaker { 
-      --walk-start: calc((100vw - 592px - 94px) * 0.35); 
-      --walk-end: calc((100vw - 592px - 94px) * 0.95); 
-      animation: walk-pos-anim 36s linear infinite; 
-      animation-delay: 2s; 
-    }
-    .walk-captionWriter { 
-      --walk-start: calc((100vw - 592px - 94px) * 0.1); 
-      --walk-end: calc((100vw - 592px - 94px) * 0.7); 
-      animation: walk-pos-anim 30s linear infinite; 
-      animation-delay: 4s; 
-    }
-    .walk-postAgent { 
-      --walk-start: calc((100vw - 592px - 94px) * 0.4); 
-      --walk-end: calc((100vw - 592px - 94px) * 1.0); 
-      animation: walk-pos-anim 20s linear infinite; 
-      animation-delay: 1s; 
-    }
-    .walk-analyticsAgent { 
-      --walk-start: calc((100vw - 592px - 94px) * 0.15); 
-      --walk-end: calc((100vw - 592px - 94px) * 0.85); 
-      animation: walk-pos-anim 34s linear infinite; 
-      animation-delay: 2.5s; 
-    }
-
-    .walk-supervisor .sprite-img { animation: walk-flip-anim 26s linear infinite; animation-delay: 0s; }
-    .walk-productFinder .sprite-img { animation: walk-flip-anim 32s linear infinite; animation-delay: 1.5s; }
-    .walk-clipSelector .sprite-img { animation: walk-flip-anim 24s linear infinite; animation-delay: 3s; }
-    .walk-videoMaker .sprite-img { animation: walk-flip-anim 36s linear infinite; animation-delay: 2s; }
-    .walk-captionWriter .sprite-img { animation: walk-flip-anim 30s linear infinite; animation-delay: 4s; }
-    .walk-postAgent .sprite-img { animation: walk-flip-anim 20s linear infinite; animation-delay: 1s; }
-    .walk-analyticsAgent .sprite-img { animation: walk-flip-anim 34s linear infinite; animation-delay: 2.5s; }
-
-    /* Waddle & Breath */
-    .agent-character:not(.idle-state) .character-visual-box {
-      animation: waddle-action 0.9s infinite alternate ease-in-out;
-    }
-    .agent-character.idle-state .character-visual-box {
+    .agent-character.idle-state .character-visual-box,
+    .agent-character.hover-paused .character-visual-box {
       animation: breathe-action 1.5s infinite alternate ease-in-out;
     }
 
-    @keyframes walk-pos-anim {
-      0% { transform: translateX(var(--walk-start, 0px)); }
-      50% { transform: translateX(var(--walk-end, calc(100vw - 592px - 94px))); }
-      100% { transform: translateX(var(--walk-start, 0px)); }
-    }
-    
-    @keyframes walk-flip-anim {
-      0%, 49.9% { transform: scaleX(1); }
-      50%, 99.9% { transform: scaleX(-1); }
-      100% { transform: scaleX(1); }
-    }
-
     @keyframes waddle-action {
-      0% { transform: translateY(0) rotate(-1.5deg); }
-      100% { transform: translateY(-6px) rotate(1.5deg); }
+      0% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(-7px) rotate(2deg); }
     }
     @keyframes breathe-action {
       0% { transform: translateY(0) scaleY(1); }
       100% { transform: translateY(-2px) scaleY(0.97); }
     }
 
-    /* Pause walking hover states */
-    .agent-character:hover {
-      animation-play-state: paused !important;
-    }
-    .agent-character:hover .character-visual-box,
+    /* Hover highlight glow */
     .agent-character:hover .sprite-img {
-      animation-play-state: paused !important;
-    }
-    .agent-character:hover .sprite-img {
-      filter: drop-shadow(0 0 6px var(--agent-color));
-    }
-
-    /* Idle override pauses */
-    .agent-character.idle-state {
-      animation-play-state: paused !important;
-    }
-    .agent-character.idle-state .sprite-img {
-      animation-play-state: paused !important;
+      filter: drop-shadow(0 0 10px var(--agent-color));
     }
 
     /* Speech bubbles */
     .speech-bubble {
       position: absolute;
-      bottom: 150px; /* sit above character height of 140px */
+      bottom: calc(100% + 15px); /* sit dynamically above scaled character */
       left: 50%;
       transform: translateX(-50%) scale(0.8);
       transform-origin: bottom center;
@@ -815,9 +725,7 @@
        CENTER WALKING SCENE
        ========================================================================== -->
   <div id="floor-zone">
-    <div id="walking-track">
-      <!-- AI Characters walking images injected by JS -->
-    </div>
+    <!-- AI Characters walking images injected by JS -->
   </div>
 
   <!-- ==========================================================================
@@ -834,7 +742,7 @@
         color: '#ffcc00', // Yellow
         status: 'active',
         bottomOffset: 0,
-        filename: 'agent-1-supervisor.png?v=7',
+        filename: 'agent-1-supervisor.png?v=8',
         lastActivity: 'Monitoring overall operations',
         tasks: ["Auditing system pipelines...", "Scheduling post feeds...", "Checking worker stats..."],
         messages: ["All agents, report status ✓", "Broadcasting pipeline tasks...", "System throughput is optimal."]
@@ -845,7 +753,7 @@
         color: '#00ff88', // Green
         status: 'active',
         bottomOffset: 8,
-        filename: 'agent-2-finder.png?v=7',
+        filename: 'agent-2-finder.png?v=8',
         lastActivity: 'Scraping Shopee trends',
         tasks: ["Scanning top tech categories...", "Filtering conversion coefficients...", "Scraping viral keywords..."],
         messages: ["Found 5 trending products!", "Ergonomic chair items are trending.", "Ergonomic keyboard scraper active."]
@@ -856,7 +764,7 @@
         color: '#cc66ff', // Purple
         status: 'active',
         bottomOffset: 4,
-        filename: 'agent-3-clip.png?v=7',
+        filename: 'agent-3-clip.png?v=8',
         lastActivity: 'Cutting product raw footage',
         tasks: ["Isolating CTR-hook frames...", "Cropping media ratios...", "Optimizing audio waveforms..."],
         messages: ["Best clip selected for #3", "Extracted tech hook frames.", "Audio tracks matching completes."]
@@ -867,7 +775,7 @@
         color: '#ff0055', // Pink
         status: 'active',
         bottomOffset: 12,
-        filename: 'agent-4-video.png?v=7',
+        filename: 'agent-4-video.png?v=8',
         lastActivity: 'Blending overlay sequences',
         tasks: ["Rendering 1080p transitions...", "Stitching overlay scenes...", "Animating text labels..."],
         messages: ["Rendering video #4...", "Video render completed! ✓", "Overlay graphics aligned."]
@@ -878,7 +786,7 @@
         color: '#00eeff', // Cyan
         status: 'active',
         bottomOffset: 2,
-        filename: 'agent-5-caption.png?v=7',
+        filename: 'agent-5-caption.png?v=8',
         lastActivity: 'Drafting viral hooks',
         tasks: ["Drafting caption copy blocks...", "Formatting SEO keywords...", "Matching trending hashtags..."],
         messages: ["Caption ready, hooks drafted", "Engagement hook optimization ready.", "Hashtags metrics matched."]
@@ -889,7 +797,7 @@
         color: '#ff00ea', // Magenta
         status: 'active',
         bottomOffset: 6,
-        filename: 'agent-6-post.png?v=7',
+        filename: 'agent-6-post.png?v=8',
         lastActivity: 'Preparing media scheduling',
         tasks: ["Uploading assets to endpoint...", "Injecting tags metadata...", "Checking video link paths..."],
         messages: ["Posted to TikTok ✓", "TikTok publish task complete.", "Post scheduled successfully."]
@@ -900,7 +808,7 @@
         color: '#00ffbc', // Emerald
         status: 'active',
         bottomOffset: 10,
-        filename: 'agent-7-analytics.png?v=7',
+        filename: 'agent-7-analytics.png?v=8',
         lastActivity: 'Recalculating ROI metrics',
         tasks: ["Polling CTR telemetry...", "Auditing payout commissions...", "Plotting metrics arrays..."],
         messages: ["CTR up 14% today 📈", "Average payout CTR +8% growth.", "Revenue margins telemetry green."]
@@ -1012,9 +920,46 @@
       document.getElementById('chart-area-path').setAttribute('d', areaD);
     }
 
+    // ==========================================================================
+    // 2D RANDOM WALKING ENGINE
+    // ==========================================================================
+    const BOUNDS = {
+      minX: 12, // % of window width
+      maxX: 88, // % of window width
+      minY: 62, // % of window height
+      maxY: 93  // % of window height
+    };
+
+    const agentsState = {};
+
+    function updateAgentElementStyles(agentId, x, y, facing) {
+      const charEl = document.getElementById(`agent-${agentId}`);
+      if (!charEl) return;
+      
+      // Position bottom center using left and top percentages
+      charEl.style.left = `${x}%`;
+      charEl.style.top = `${y}%`;
+      
+      // Perspective scale: y from minY to maxY maps to height 90px to 145px
+      const scaleRatio = (y - BOUNDS.minY) / (BOUNDS.maxY - BOUNDS.minY);
+      const clampedRatio = Math.max(0, Math.min(1, scaleRatio));
+      const height = 90 + clampedRatio * (145 - 90);
+      charEl.style.height = `${height}px`;
+      
+      // Depth sorting based on y coordinate
+      charEl.style.zIndex = Math.floor(y * 10);
+      
+      // Sprite image horizontal flip based on walking direction
+      const imgEl = charEl.querySelector('.sprite-img');
+      if (imgEl) {
+        imgEl.style.transform = facing === 'right' ? 'scaleX(1)' : 'scaleX(-1)';
+      }
+    }
+
     // Inject Characters in Floor Zone Walkway
     function initCharacters() {
-      const track = document.getElementById('walking-track');
+      const track = document.getElementById('floor-zone');
+      if (!track) return;
       track.innerHTML = '';
       
       const agentKeys = Object.keys(AGENTS_CONFIG);
@@ -1023,12 +968,26 @@
         
         // Define Character div container
         const char = document.createElement('div');
-        char.className = `agent-character walk-${config.id}`;
+        char.className = `agent-character`;
         char.id = `agent-${config.id}`;
         
-        // Depth layering bottom positions offsets
-        char.style.bottom = `${config.bottomOffset}px`;
-        char.style.zIndex = 50 + config.bottomOffset;
+        // Initial random position
+        const x = BOUNDS.minX + Math.random() * (BOUNDS.maxX - BOUNDS.minX);
+        const y = BOUNDS.minY + Math.random() * (BOUNDS.maxY - BOUNDS.minY);
+        const facing = Math.random() > 0.5 ? 'right' : 'left';
+        
+        // Initialize state
+        agentsState[config.id] = {
+          id: config.id,
+          x: x,
+          y: y,
+          targetX: x,
+          targetY: y,
+          state: 'idle', // 'idle' or 'walking'
+          speed: 0.03 + Math.random() * 0.03, // percentage speed per frame
+          idleTimer: Math.floor(Math.random() * 180) + 120, // 2 to 5 seconds of idle
+          facing: facing
+        };
         
         char.innerHTML = `
           <!-- Speech bubble overlay -->
@@ -1048,10 +1007,12 @@
         
         // Hover listeners to pause walking and display task speech bubbles
         char.addEventListener('mouseenter', () => {
+          char.classList.add('hover-paused');
           showSpeechBubble(config.id, getRandomTask(config.id));
         });
         
         char.addEventListener('mouseleave', () => {
+          char.classList.remove('hover-paused');
           hideSpeechBubble(config.id);
         });
 
@@ -1061,7 +1022,77 @@
         });
 
         track.appendChild(char);
+        
+        // Apply initial styles immediately
+        updateAgentElementStyles(config.id, x, y, facing);
       });
+      
+      // Start the animation loop
+      requestAnimationFrame(updateAgentsMovement);
+    }
+
+    function updateAgentsMovement() {
+      const agentKeys = Object.keys(AGENTS_CONFIG);
+      
+      agentKeys.forEach(key => {
+        const config = AGENTS_CONFIG[key];
+        const state = agentsState[key];
+        const charEl = document.getElementById(`agent-${key}`);
+        
+        if (!state || !charEl) return;
+        
+        // If agent is manually set to idle, or hovered (paused), do not move
+        if (config.status === 'idle' || charEl.classList.contains('hover-paused')) {
+          if (config.status === 'idle' && !charEl.classList.contains('idle-state')) {
+            charEl.classList.add('idle-state');
+          }
+          return;
+        }
+        
+        // Ensure idle-state class is removed if active and they are walking
+        if (config.status === 'active' && charEl.classList.contains('idle-state')) {
+          if (state.state === 'walking') {
+            charEl.classList.remove('idle-state');
+          }
+        }
+        
+        if (state.state === 'idle') {
+          if (!charEl.classList.contains('idle-state')) {
+            charEl.classList.add('idle-state');
+          }
+          
+          state.idleTimer--;
+          if (state.idleTimer <= 0) {
+            // Pick new target
+            state.targetX = BOUNDS.minX + Math.random() * (BOUNDS.maxX - BOUNDS.minX);
+            state.targetY = BOUNDS.minY + Math.random() * (BOUNDS.maxY - BOUNDS.minY);
+            state.state = 'walking';
+            state.facing = state.targetX > state.x ? 'right' : 'left';
+            charEl.classList.remove('idle-state'); // Start waddle
+          }
+        } else if (state.state === 'walking') {
+          const dx = state.targetX - state.x;
+          const dy = state.targetY - state.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 0.5) {
+            state.x = state.targetX;
+            state.y = state.targetY;
+            state.state = 'idle';
+            state.idleTimer = Math.floor(Math.random() * 180) + 120; // 2 to 5 seconds
+            charEl.classList.add('idle-state'); // Start breathing stand
+          } else {
+            // Move towards target
+            state.x += (dx / dist) * state.speed;
+            state.y += (dy / dist) * state.speed;
+            state.facing = dx > 0 ? 'right' : 'left';
+          }
+          
+          updateAgentElementStyles(key, state.x, state.y, state.facing);
+        }
+      });
+      
+      requestAnimationFrame(updateAgentsMovement);
     }
 
     // Toggle Active / Idle status
@@ -1087,8 +1118,12 @@
           charEl.classList.add('idle-state');
           config.lastActivity = 'Idling standby.';
         } else {
-          charEl.classList.remove('idle-state');
           config.lastActivity = 'Resuming walk telemetry.';
+          const state = agentsState[agentId];
+          if (state) {
+            state.state = 'idle';
+            state.idleTimer = 10; // Trigger walk soon
+          }
         }
       }
       
