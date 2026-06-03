@@ -8,7 +8,7 @@
   <!-- Fonts from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
@@ -31,10 +31,9 @@
       height: 100vh;
       width: 100vw;
       position: relative;
-      font-family: 'Share Tech Mono', monospace;
-      color: #c8f0c8;
+      font-family: 'Inter', sans-serif;
+      color: #f1f5f9;
     }
-
 
     body::after {
       content: "";
@@ -43,130 +42,172 @@
       background: radial-gradient(
         circle,
         rgba(0, 0, 0, 0) 40%,
-        rgba(0, 0, 0, 0.5) 100%
+        rgba(0, 0, 0, 0.6) 100%
       );
       z-index: 998;
       pointer-events: none;
     }
 
-    /* Scrollbars retro styling */
+    /* Scrollbars modern styling */
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(5, 5, 20, 0.5);
+      background: rgba(10, 15, 30, 0.3);
     }
     ::-webkit-scrollbar-thumb {
-      background: #00eeff;
-      border-radius: 3px;
-      box-shadow: 0 0 4px #00eeff;
+      background: rgba(0, 238, 255, 0.3);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 238, 255, 0.6);
+    }
+
+    /* Sleek 3D Floating Header HUD */
+    .header-hud {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 15, 30, 0.7);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 8px 24px;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+    }
+    .hud-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: #00eeff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(0, 238, 255, 0.4);
     }
 
     /* ==========================================================================
-       2. RETRO DASHBOARD PANELS
+       2. PREMIUM GLASSMOPHISM 3D DASHBOARD PANELS
        ========================================================================== */
     .dashboard-panel {
-      background: rgba(4, 6, 20, 0.90);
-      border-radius: 6px;
-      padding: 16px;
+      background: rgba(8, 12, 28, 0.75);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      padding: 18px;
       position: fixed;
       width: 280px;
-      font-family: 'Share Tech Mono', monospace;
+      font-family: 'Inter', sans-serif;
       z-index: 100;
-      color: #c8f0c8;
-      font-size: 12px;
+      color: #cbd5e1;
       display: flex;
       flex-direction: column;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dashboard-panel:hover {
+      transform: translateY(-2px);
+      background: rgba(8, 12, 28, 0.82);
     }
 
-    /* Placements */
+    /* Corner Placements with Vibrant 3D Glows */
     .panel-top-left {
       top: 16px;
       left: 16px;
       height: calc(50vh - 24px);
-      border: 1.5px solid #00ff88;
-      box-shadow: 0 0 10px #00ff88;
+      border-color: rgba(0, 255, 136, 0.25);
+      border-top-color: rgba(0, 255, 136, 0.5);
+      box-shadow: 0 12px 32px rgba(0, 255, 136, 0.08), 0 0 1px 1px rgba(0, 255, 136, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
     }
 
     .panel-top-right {
       top: 16px;
       right: 16px;
       height: calc(50vh - 24px);
-      border: 1.5px solid #00eeff;
-      box-shadow: 0 0 10px #00eeff;
+      border-color: rgba(0, 238, 255, 0.25);
+      border-top-color: rgba(0, 238, 255, 0.5);
+      box-shadow: 0 12px 32px rgba(0, 238, 255, 0.08), 0 0 1px 1px rgba(0, 238, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
     }
 
     .panel-bottom-left {
       bottom: 16px;
       left: 16px;
       height: calc(50vh - 24px);
-      border: 1.5px solid #ffcc00;
-      box-shadow: 0 0 10px #ffcc00;
+      border-color: rgba(255, 204, 0, 0.25);
+      border-top-color: rgba(255, 204, 0, 0.5);
+      box-shadow: 0 12px 32px rgba(255, 204, 0, 0.08), 0 0 1px 1px rgba(255, 204, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
     }
 
     .panel-bottom-right {
       bottom: 16px;
       right: 16px;
       height: 300px;
-      border: 1.5px solid #cc66ff;
-      box-shadow: 0 0 10px #cc66ff;
+      border-color: rgba(204, 102, 255, 0.25);
+      border-top-color: rgba(204, 102, 255, 0.5);
+      box-shadow: 0 12px 32px rgba(204, 102, 255, 0.08), 0 0 1px 1px rgba(204, 102, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
     }
 
-    /* Titles styling */
+    /* Elegant Modern Panel Titles */
     .panel-title {
-      font-family: 'Press Start 2P', cursive, monospace;
-      font-size: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
       text-transform: uppercase;
-      margin-bottom: 12px;
-      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      letter-spacing: 0.8px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .panel-top-left .panel-title { color: #00ff88; text-shadow: 0 0 4px #00ff88; }
-    .panel-top-right .panel-title { color: #00eeff; text-shadow: 0 0 4px #00eeff; }
-    .panel-bottom-left .panel-title { color: #ffcc00; text-shadow: 0 0 4px #ffcc00; }
-    .panel-bottom-right .panel-title { color: #cc66ff; text-shadow: 0 0 4px #cc66ff; }
+    .panel-top-left .panel-title { color: #00ff88; text-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    .panel-top-right .panel-title { color: #00eeff; text-shadow: 0 0 8px rgba(0, 238, 255, 0.3); }
+    .panel-bottom-left .panel-title { color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.3); }
+    .panel-bottom-right .panel-title { color: #cc66ff; text-shadow: 0 0 8px rgba(204, 102, 255, 0.3); }
 
     .panel-body {
       overflow-y: auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
-    /* Panel elements */
+    /* List Items Styling */
     .agent-status-item {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(0, 255, 136, 0.1);
-      padding: 6px 8px;
-      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 8px 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .agent-status-item:hover {
-      background: rgba(0, 255, 136, 0.05);
-      border-color: #00ff88;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
     }
     .agent-info-left {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       overflow: hidden;
       flex-grow: 1;
     }
     .agent-avatar-indicator {
       width: 8px;
       height: 8px;
-      border-radius: 1px;
+      border-radius: 50%;
       background-color: var(--agent-color);
-      box-shadow: 0 0 4px var(--agent-color);
+      box-shadow: 0 0 8px var(--agent-color);
       flex-shrink: 0;
     }
     .agent-meta-details {
@@ -175,13 +216,14 @@
       overflow: hidden;
     }
     .agent-mini-name {
+      font-family: 'Outfit', sans-serif;
       font-size: 12px;
-      font-weight: bold;
+      font-weight: 600;
       color: #fff;
     }
     .agent-mini-activity {
       font-size: 11px;
-      color: #82a882;
+      color: #94a3b8;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -190,10 +232,10 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      background: rgba(0,0,0,0.4);
-      padding: 2px 4px;
-      border-radius: 3px;
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 3px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
       flex-shrink: 0;
     }
     .status-dot {
@@ -202,30 +244,33 @@
       border-radius: 50%;
       display: inline-block;
     }
-    .status-dot.active { background-color: #00ff88; box-shadow: 0 0 4px #00ff88; }
-    .status-dot.idle { background-color: #718096; box-shadow: none; }
+    .status-dot.active { background-color: #00ff88; box-shadow: 0 0 6px #00ff88; }
+    .status-dot.idle { background-color: #64748b; box-shadow: none; }
     
     .status-text {
-      font-size: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 9px;
       text-transform: uppercase;
-      font-weight: bold;
+      font-weight: 700;
       color: #fff;
     }
 
-    /* Metric Grid */
+    /* Metric Grid (3D styling) */
     .metric-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 8px;
     }
     .metric-row {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 6px 8px;
-      border-radius: 4px;
-      border-left: 2px solid var(--theme-color);
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-left: 3px solid var(--theme-color);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
     }
     .metric-row.rev { --theme-color: #00ff88; }
     .metric-row.post { --theme-color: #00eeff; }
@@ -233,32 +278,35 @@
     .metric-row.prod { --theme-color: #ffcc00; grid-column: span 2; }
 
     .metric-label {
-      font-size: 10px;
-      color: #82a882;
+      font-size: 9px;
+      color: #94a3b8;
       text-transform: uppercase;
+      font-weight: 500;
     }
     .metric-val {
-      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
       color: #fff;
       margin-top: 2px;
-      font-weight: bold;
+      font-weight: 700;
     }
     .metric-val.revenue { color: #00ff88; }
     
     /* SVG line chart */
     .chart-container {
-      margin-top: 2px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 4px;
-      border: 1px solid rgba(0, 238, 255, 0.15);
-      padding: 4px;
+      margin-top: 4px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 8px;
     }
     .chart-title {
+      font-family: 'Outfit', sans-serif;
       font-size: 10px;
       color: #00eeff;
       text-transform: uppercase;
-      margin-bottom: 2px;
-      font-weight: bold;
+      margin-bottom: 4px;
+      font-weight: 700;
     }
     .chart-svg {
       width: 100%;
@@ -268,23 +316,23 @@
     .chart-line {
       fill: none;
       stroke: #00eeff;
-      stroke-width: 1.5;
-      filter: drop-shadow(0 0 2px rgba(0, 238, 255, 0.5));
+      stroke-width: 2;
+      filter: drop-shadow(0 0 3px rgba(0, 238, 255, 0.5));
     }
     .chart-area {
       fill: url(#chart-gradient);
       opacity: 0.15;
     }
 
-    /* Content Queue */
+    /* Content Queue Pipeline Cards */
     .queue-task {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 6px;
-      border-radius: 4px;
+      padding: 8px;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
     .queue-task-header {
       display: flex;
@@ -293,8 +341,9 @@
       gap: 4px;
     }
     .queue-task-title {
-      font-size: 11px;
-      font-weight: bold;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
@@ -302,57 +351,58 @@
     }
     .queue-task-time {
       font-size: 10px;
-      color: #82a882;
+      color: #94a3b8;
     }
     .queue-task-details {
-      font-size: 10px;
-      color: #82a882;
+      font-size: 11px;
+      color: #94a3b8;
     }
     .badge {
-      font-family: 'Press Start 2P', cursive, monospace;
-      font-size: 7px;
-      padding: 1px 4px;
-      border-radius: 2px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 8px;
+      padding: 2px 8px;
+      border-radius: 12px;
       text-transform: uppercase;
-      border: 1px solid;
+      border: none;
     }
     .badge.pending {
       color: #ffcc00;
-      background: rgba(255, 204, 0, 0.08);
-      border-color: rgba(255, 204, 0, 0.25);
+      background: rgba(255, 204, 0, 0.15);
+      box-shadow: 0 0 8px rgba(255, 204, 0, 0.05);
     }
     .badge.running {
       color: #00eeff;
-      background: rgba(0, 238, 255, 0.08);
-      border-color: rgba(0, 238, 255, 0.25);
+      background: rgba(0, 238, 255, 0.15);
+      box-shadow: 0 0 8px rgba(0, 238, 255, 0.05);
     }
     .badge.done {
       color: #00ff88;
-      background: rgba(0, 255, 136, 0.08);
-      border-color: rgba(0, 255, 136, 0.25);
+      background: rgba(0, 255, 136, 0.15);
+      box-shadow: 0 0 8px rgba(0, 255, 136, 0.05);
     }
 
     /* Terminal logs */
     .chat-terminal {
-      background: rgba(4, 4, 14, 0.95);
-      border: 1px solid rgba(204, 102, 255, 0.2);
-      border-radius: 4px;
+      background: rgba(5, 7, 18, 0.50);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
       flex-grow: 1;
-      padding: 6px;
-      font-family: 'Share Tech Mono', monospace;
+      padding: 8px;
+      font-family: 'Inter', sans-serif;
       font-size: 11px;
-      line-height: 1.3;
+      line-height: 1.4;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
-      margin-bottom: 6px;
+      gap: 6px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+      margin-bottom: 8px;
     }
     .chat-line {
       animation: slide-in-chat 0.2s ease-out forwards;
       border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-      padding-bottom: 2px;
+      padding-bottom: 3px;
       word-break: break-word;
     }
     @keyframes slide-in-chat {
@@ -360,20 +410,20 @@
       to { transform: translateY(0); opacity: 1; }
     }
     .chat-time {
-      color: #82a882;
+      color: #64748b;
       font-size: 9px;
-      margin-right: 3px;
+      margin-right: 4px;
     }
     .chat-sender {
-      font-weight: bold;
+      font-weight: 600;
       margin-right: 4px;
     }
     .chat-msg {
-      color: #c8f0c8;
+      color: #cbd5e1;
     }
 
-    .sender-system { color: #8a8ab0; }
-    .sender-user { color: #fff; text-shadow: 0 0 3px #00eeff; }
+    .sender-system { color: #94a3b8; }
+    .sender-user { color: #fff; text-shadow: 0 0 4px rgba(0, 238, 255, 0.3); }
     .sender-supervisor { color: #ffcc00; }
     .sender-productFinder { color: #00ff88; }
     .sender-clipSelector { color: #cc66ff; }
@@ -382,20 +432,22 @@
     .sender-postAgent { color: #ff00ea; }
     .sender-analyticsAgent { color: #00ffbc; }
 
-    /* Interactive input */
+    /* Interactive Input (Modern Beveled Glass) */
     .chat-input-container {
       display: flex;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(204, 102, 255, 0.2);
-      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
       overflow: hidden;
       flex-shrink: 0;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
     }
     .chat-prompt {
       color: #cc66ff;
-      padding: 4px 2px 4px 8px;
-      font-weight: bold;
-      font-size: 11px;
+      padding: 6px 2px 6px 10px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
     }
     .chat-input {
       flex-grow: 1;
@@ -403,20 +455,21 @@
       border: none;
       outline: none;
       color: #fff;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      padding: 4px 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      padding: 6px 8px;
     }
     .chat-send-btn {
-      background: rgba(204, 102, 255, 0.15);
+      background: rgba(204, 102, 255, 0.18);
       border: none;
-      border-left: 1px solid rgba(204, 102, 255, 0.2);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
       color: #cc66ff;
       cursor: pointer;
-      font-family: 'Share Tech Mono', monospace;
+      font-family: 'Outfit', sans-serif;
       font-size: 11px;
-      font-weight: bold;
-      padding: 0 10px;
+      font-weight: 700;
+      padding: 0 14px;
+      transition: all 0.2s;
     }
     .chat-send-btn:hover {
       background: rgba(204, 102, 255, 0.3);
