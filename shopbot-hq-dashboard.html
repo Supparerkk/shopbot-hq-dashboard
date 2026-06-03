@@ -493,6 +493,8 @@
     .agent-character {
       position: absolute;
       transform: translate(-50%, -100%);
+      width: 94px;
+      height: 140px;
       cursor: pointer;
       pointer-events: auto;
       transform-origin: bottom center;
@@ -527,6 +529,8 @@
 
     /* Sprite Wrapper */
     .character-visual-box {
+      width: 94px;
+      height: 140px;
       display: flex;
       justify-content: center;
       align-items: flex-end;
@@ -534,6 +538,7 @@
     }
 
     .sprite-img {
+      height: 140px;
       width: auto;
       object-fit: contain;
       transform-origin: bottom center;
@@ -939,12 +944,6 @@
       // Position bottom center using left and top percentages
       charEl.style.left = `${x}%`;
       charEl.style.top = `${y}%`;
-      
-      // Perspective scale: y from minY to maxY maps to height 90px to 145px
-      const scaleRatio = (y - BOUNDS.minY) / (BOUNDS.maxY - BOUNDS.minY);
-      const clampedRatio = Math.max(0, Math.min(1, scaleRatio));
-      const height = 90 + clampedRatio * (145 - 90);
-      charEl.style.height = `${height}px`;
       
       // Depth sorting based on y coordinate
       charEl.style.zIndex = Math.floor(y * 10);
