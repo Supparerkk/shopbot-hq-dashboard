@@ -93,90 +93,381 @@
     /* ==========================================================================
        2. PREMIUM GLASSMOPHISM 3D DASHBOARD PANELS
        ========================================================================== */
-    .dashboard-panel {
+    .hud-health {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 255, 136, 0.1);
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 136, 0.2);
+    }
+    .health-dot.active-glow {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #00ff88;
+      box-shadow: 0 0 8px #00ff88;
+      animation: pulse-health 2s infinite alternate;
+    }
+    @keyframes pulse-health {
+      0% { opacity: 0.6; box-shadow: 0 0 4px #00ff88; }
+      100% { opacity: 1; box-shadow: 0 0 12px #00ff88; }
+    }
+    .health-text {
+      font-size: 9px;
+      font-weight: 700;
+      color: #00ff88;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sidebar structures */
+    .sidebar {
+      position: fixed;
+      top: 80px;
+      height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 100;
+      color: #cbd5e1;
+    }
+    .sidebar-left {
+      left: 20px;
+      width: 320px;
+    }
+    .sidebar-right {
+      right: 20px;
+      width: 340px;
+    }
+
+    .sidebar-panel-inner {
       background: rgba(8, 12, 28, 0.75);
       backdrop-filter: blur(16px) saturate(180%);
       -webkit-backdrop-filter: blur(16px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-top: 1.5px solid rgba(255, 255, 255, 0.18);
       border-radius: 16px;
-      padding: 18px;
-      position: fixed;
-      width: 280px;
-      font-family: 'Inter', sans-serif;
-      z-index: 100;
-      color: #cbd5e1;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
     }
-    .dashboard-panel:hover {
+    .sidebar-panel-inner:hover {
       transform: translateY(-2px);
       background: rgba(8, 12, 28, 0.82);
     }
 
-    /* Corner Placements with Vibrant 3D Glows */
-    .panel-top-left {
-      top: 16px;
-      left: 16px;
-      height: calc(50vh - 24px);
-      border-color: rgba(0, 255, 136, 0.25);
-      border-top-color: rgba(0, 255, 136, 0.5);
-      box-shadow: 0 12px 32px rgba(0, 255, 136, 0.08), 0 0 1px 1px rgba(0, 255, 136, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    /* Left Sidebar Heights */
+    .sidebar-left .panel-agent-status {
+      height: 48%;
+      border-color: rgba(0, 255, 136, 0.2);
+      border-top-color: rgba(0, 255, 136, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 255, 136, 0.05);
+    }
+    .sidebar-left .panel-content-queue {
+      height: 52%;
+      border-color: rgba(255, 204, 0, 0.2);
+      border-top-color: rgba(255, 204, 0, 0.4);
+      box-shadow: 0 8px 32px rgba(255, 204, 0, 0.05);
     }
 
-    .panel-top-right {
-      top: 16px;
-      right: 16px;
-      height: calc(50vh - 24px);
-      border-color: rgba(0, 238, 255, 0.25);
-      border-top-color: rgba(0, 238, 255, 0.5);
-      box-shadow: 0 12px 32px rgba(0, 238, 255, 0.08), 0 0 1px 1px rgba(0, 238, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    /* Right Sidebar Height */
+    .sidebar-right .panel-analytics {
+      height: 100%;
+      border-color: rgba(0, 238, 255, 0.2);
+      border-top-color: rgba(0, 238, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 238, 255, 0.05);
     }
 
-    .panel-bottom-left {
-      bottom: 16px;
-      left: 16px;
-      height: calc(50vh - 24px);
-      border-color: rgba(255, 204, 0, 0.25);
-      border-top-color: rgba(255, 204, 0, 0.5);
-      box-shadow: 0 12px 32px rgba(255, 204, 0, 0.08), 0 0 1px 1px rgba(255, 204, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-    }
-
-    .panel-bottom-right {
-      bottom: 16px;
-      right: 16px;
-      height: 300px;
-      border-color: rgba(204, 102, 255, 0.25);
-      border-top-color: rgba(204, 102, 255, 0.5);
-      box-shadow: 0 12px 32px rgba(204, 102, 255, 0.08), 0 0 1px 1px rgba(204, 102, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-    }
-
-    /* Elegant Modern Panel Titles */
+    /* Panel layout and components styles */
     .panel-title {
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
       font-size: 13px;
       text-transform: uppercase;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       letter-spacing: 0.8px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
-    .panel-top-left .panel-title { color: #00ff88; text-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
-    .panel-top-right .panel-title { color: #00eeff; text-shadow: 0 0 8px rgba(0, 238, 255, 0.3); }
-    .panel-bottom-left .panel-title { color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.3); }
-    .panel-bottom-right .panel-title { color: #cc66ff; text-shadow: 0 0 8px rgba(204, 102, 255, 0.3); }
+    .panel-agent-status .panel-title { color: #00ff88; text-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    .panel-content-queue .panel-title { color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.3); }
+    .panel-analytics .panel-title { color: #00eeff; text-shadow: 0 0 8px rgba(0, 238, 255, 0.3); }
 
     .panel-body {
       overflow-y: auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      padding-right: 2px;
     }
+
+    /* Metrics sections inside Right Sidebar */
+    .metrics-section {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 10px;
+      margin-bottom: 2px;
+    }
+    .metrics-section:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    .section-subtitle {
+      font-family: 'Outfit', sans-serif;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    /* Financial Dashboard styling */
+    .commission-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .comm-pill {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+    }
+    .comm-pill.pending { border-left: 3px solid #ffcc00; }
+    .comm-pill.approved { border-left: 3px solid #00ff88; }
+    
+    .pill-label {
+      font-size: 8.5px;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+    .pill-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .comm-pill.pending .pill-val { color: #ffcc00; }
+    .comm-pill.approved .pill-val { color: #00ff88; }
+
+    /* Performance Metrics grid */
+    .metrics-grid-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+    .metric-mini-card {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card-label {
+      font-size: 8.5px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .card-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 2px;
+      color: #fff;
+    }
+
+    /* Traffic distribution SVG donut */
+    .traffic-donut-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .donut-svg-wrapper {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      flex-shrink: 0;
+    }
+    .donut-chart {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+    .donut-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .donut-center-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .traffic-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-grow: 1;
+    }
+    .legend-item {
+      font-size: 9.5px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* Top products list widgets */
+    .top-products-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .top-product-item {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 6px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .prod-rank {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      color: #ffcc00;
+      width: 12px;
+    }
+    .prod-icon {
+      font-size: 13px;
+    }
+    .prod-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .prod-name {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prod-stats {
+      font-size: 8.5px;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    /* Bottom center panel container positioning */
+    .bottom-terminal-container {
+      position: fixed;
+      bottom: 20px;
+      left: 360px;
+      right: 380px;
+      height: 180px;
+      background: rgba(8, 12, 28, 0.75);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(204, 102, 255, 0.2);
+      border-top: 1.5px solid rgba(204, 102, 255, 0.4);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    .bottom-terminal-container .panel-title {
+      color: #cc66ff;
+      text-shadow: 0 0 8px rgba(204, 102, 255, 0.3);
+      margin-bottom: 8px;
+    }
+    .bottom-terminal-container .chat-terminal {
+      margin-bottom: 6px;
+    }
+
+    /* Center floating health monitor overlay */
+    .health-monitor-overlay {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 440px;
+      background: rgba(8, 12, 28, 0.75);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 59, 48, 0.25);
+      border-top: 1.5px solid rgba(255, 59, 48, 0.5);
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      z-index: 99;
+      box-shadow: 0 8px 32px rgba(255, 59, 48, 0.08);
+      pointer-events: auto;
+    }
+    .health-logs-container {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 6px;
+    }
+    .health-log-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10.5px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .health-tag {
+      font-weight: 700;
+      font-size: 8px;
+      padding: 1px 4px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .health-log-row.alert { border-left: 2.5px solid #ff3b30; }
+    .health-log-row.warning { border-left: 2.5px solid #ffcc00; }
+    .health-log-row.info { border-left: 2.5px solid #00eeff; }
+    
+    .tag-alert { background: rgba(255,59,48,0.2); color: #ff3b30; }
+    .tag-warning { background: rgba(255,204,0,0.2); color: #ffcc00; }
+    .tag-info { background: rgba(0,238,255,0.2); color: #00eeff; }
 
     /* List Items Styling */
     .agent-status-item {
@@ -635,85 +926,156 @@
 </head>
 <body>
 
-  <!-- Retro HUD Top Title Bar -->
+  <!-- Top HUD Header -->
   <header class="header-hud">
-    <div class="hud-title">&gt; SHOPBOT HQ // MONITOR SYSTEM &lt;</div>
+    <div class="hud-title">ShopBot HQ // Comprehensive Affiliate Monitor</div>
+    <div class="hud-health">
+      <span class="health-dot active-glow"></span>
+      <span class="health-text">SYSTEM NOMINAL</span>
+    </div>
   </header>
 
   <!-- ==========================================================================
-       4 PANELS CORNERS CONSTRAINED
+       LEFT SIDEBAR (AI SYSTEM & PIPELINE)
        ========================================================================== -->
-
-  <!-- Top Left Panel: Agents Status -->
-  <div class="dashboard-panel panel-top-left" id="panel-agent-status">
-    <div class="panel-title">
-      <span class="status-dot active"></span> SYSTEM_AGENTS.LOG
-    </div>
-    <div class="panel-body" id="agent-status-list">
-      <!-- Populated dynamically -->
-    </div>
-  </div>
-
-  <!-- Top Right Panel: Affiliate metrics counter -->
-  <div class="dashboard-panel panel-top-right" id="panel-affiliate-today">
-    <div class="panel-title">
-      ⚡ AFFILIATE_STATS.HUD
-    </div>
-    <div class="panel-body">
-      <div class="metric-grid">
-        <div class="metric-row rev">
-          <span class="metric-label">Daily Revenue</span>
-          <span class="metric-val revenue" id="metric-revenue">฿3,475.09</span>
-        </div>
-        <div class="metric-row post">
-          <span class="metric-label">Posts Published</span>
-          <span class="metric-val" id="metric-posts">34</span>
-        </div>
-        <div class="metric-row click">
-          <span class="metric-label">Clicks Logged</span>
-          <span class="metric-val" id="metric-clicks">2,115</span>
-        </div>
-        <div class="metric-row prod">
-          <span class="metric-label">Top Affiliate Product</span>
-          <span class="metric-val" id="metric-top-product" style="color: #ffcc00; font-size:12px;">Wireless Earbuds X3</span>
-        </div>
+  <div class="sidebar sidebar-left">
+    <!-- System Agents Log Panel -->
+    <div class="sidebar-panel-inner panel-agent-status" id="panel-agent-status">
+      <div class="panel-title">
+        <span class="status-dot active"></span> SYSTEM_AGENTS.LOG
       </div>
-
-      <!-- Neon Cyan SVG Line chart metrics CTR -->
-      <div class="chart-container">
-        <div class="chart-title">Real-Time Performance CTR</div>
-        <svg class="chart-svg" viewBox="0 0 300 50" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#00eeff" stop-opacity="0.3" />
-              <stop offset="100%" stop-color="#00eeff" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-          <line x1="0" y1="12" x2="300" y2="12" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-          <line x1="0" y1="25" x2="300" y2="25" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-          <line x1="0" y1="38" x2="300" y2="38" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-          <path class="chart-area" d="" id="chart-area-path" />
-          <path class="chart-line" d="" id="chart-line-path" />
-        </svg>
+      <div class="panel-body" id="agent-status-list">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+    
+    <!-- Queued Pipelines Panel -->
+    <div class="sidebar-panel-inner panel-content-queue" id="panel-content-queue">
+      <div class="panel-title">
+        ⚙️ QUEUED_PIPELINES.SYS
+      </div>
+      <div class="panel-body" id="content-queue-list">
+        <!-- Populated dynamically -->
       </div>
     </div>
   </div>
 
-  <!-- Bottom Left Panel: Content Pipeline Queue -->
-  <div class="dashboard-panel panel-bottom-left" id="panel-content-queue">
-    <div class="panel-title">
-      ⚙️ QUEUED_PIPELINES.SYS
-    </div>
-    <div class="panel-body" id="content-queue-list">
-      <!-- Populated dynamically -->
+  <!-- ==========================================================================
+       RIGHT SIDEBAR (IN-DEPTH ANALYTICS & FINANCIALS)
+       ========================================================================== -->
+  <div class="sidebar sidebar-right">
+    <!-- In-Depth Analytics Panel -->
+    <div class="sidebar-panel-inner panel-analytics" id="panel-affiliate-today">
+      <div class="panel-title">⚡ AFFILIATE_STATS.HUD</div>
+      <div class="panel-body">
+        
+        <!-- Financial Dashboard -->
+        <div class="metrics-section">
+          <div class="section-subtitle">Financial Dashboard</div>
+          <div class="metric-row rev" style="--theme-color: #00ff88; margin-bottom: 6px;">
+            <span class="metric-label">Daily Revenue</span>
+            <span class="metric-val revenue" id="metric-revenue">฿3,475.09</span>
+          </div>
+          <div class="commission-split">
+            <div class="comm-pill pending">
+              <span class="pill-label">Pending</span>
+              <span class="pill-val" id="metric-pending">฿1,120.00</span>
+            </div>
+            <div class="comm-pill approved">
+              <span class="pill-label">Withdrawable</span>
+              <span class="pill-val" id="metric-withdrawable">฿2,355.09</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="metrics-section">
+          <div class="section-subtitle">Performance Metrics</div>
+          <div class="metrics-grid-mini">
+            <div class="metric-mini-card clicks">
+              <span class="card-label">Clicks</span>
+              <span class="card-val" id="metric-clicks">2,115</span>
+            </div>
+            <div class="metric-mini-card cvr">
+              <span class="card-label">CVR</span>
+              <span class="card-val" id="metric-cvr">2.8%</span>
+            </div>
+            <div class="metric-mini-card cancellation">
+              <span class="card-label">Cancel Rate</span>
+              <span class="card-val" id="metric-cancellation">1.5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Traffic Distribution -->
+        <div class="metrics-section">
+          <div class="section-subtitle">Traffic Distribution</div>
+          <div class="traffic-donut-container">
+            <div class="donut-svg-wrapper">
+              <svg width="70" height="70" viewBox="0 0 36 36" class="donut-chart">
+                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="3"></circle>
+                <!-- TikTok (Cyan): 45% -->
+                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#00eeff" stroke-width="3" stroke-dasharray="45 55" stroke-dashoffset="25"></circle>
+                <!-- Reels (Pink): 25% -->
+                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#ff00aa" stroke-width="3" stroke-dasharray="25 75" stroke-dashoffset="-20"></circle>
+                <!-- Shorts (Red): 20% -->
+                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#ff3b30" stroke-width="3" stroke-dasharray="20 80" stroke-dashoffset="-45"></circle>
+                <!-- X (Yellow): 10% -->
+                <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#ffcc00" stroke-width="3" stroke-dasharray="10 90" stroke-dashoffset="-65"></circle>
+              </svg>
+              <div class="donut-center-text">
+                <span class="donut-center-val">2.1k</span>
+              </div>
+            </div>
+            <div class="traffic-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#00eeff"></span>TikTok (45%)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#ff00aa"></span>Reels (25%)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#ff3b30"></span>Shorts (20%)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#ffcc00"></span>X / Twitter (10%)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Products -->
+        <div class="metrics-section">
+          <div class="section-subtitle">Top Products</div>
+          <div class="top-products-list" id="top-products-list">
+            <div class="top-product-item">
+              <div class="prod-rank">1</div>
+              <div class="prod-icon">🎧</div>
+              <div class="prod-info">
+                <div class="prod-name">Wireless Earbuds X3</div>
+                <div class="prod-stats">Clicks: 1.2k | Earned: ฿1,850</div>
+              </div>
+            </div>
+            <div class="top-product-item">
+              <div class="prod-rank">2</div>
+              <div class="prod-icon">🪑</div>
+              <div class="prod-info">
+                <div class="prod-name">Ergonomic Chair V2</div>
+                <div class="prod-stats">Clicks: 650 | Earned: ฿1,100</div>
+              </div>
+            </div>
+            <div class="top-product-item">
+              <div class="prod-rank">3</div>
+              <div class="prod-icon">⌨️</div>
+              <div class="prod-info">
+                <div class="prod-name">Mechanical Keyboard K8</div>
+                <div class="prod-stats">Clicks: 265 | Earned: ฿525</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <!-- Bottom Right Panel: Core Team Chat Terminal log -->
-  <div class="dashboard-panel panel-bottom-right" id="panel-team-chat">
-    <div class="panel-title">
-      💬 CORE_TEAM_CHAT.FEED
-    </div>
+  <!-- ==========================================================================
+       BOTTOM CENTER PANEL (CORE TERMINAL / CHAT FEED)
+       ========================================================================== -->
+  <div class="bottom-terminal-container" id="panel-team-chat">
+    <div class="panel-title">💬 CORE_TEAM_CHAT.FEED</div>
     <div class="chat-terminal" id="terminal-feed">
       <!-- Logs generated dynamically -->
     </div>
@@ -724,6 +1086,29 @@
         <button type="submit" class="chat-send-btn">SEND</button>
       </div>
     </form>
+  </div>
+
+  <!-- ==========================================================================
+       CENTER FLOATING OVERLAY: PRODUCT & LINK HEALTH MONITOR
+       ========================================================================== -->
+  <div class="health-monitor-overlay" id="health-monitor-overlay">
+    <div class="panel-title" style="color: #ff3b30; text-shadow: 0 0 8px rgba(255, 59, 48, 0.3);">
+      ⚠️ PRODUCT &amp; LINK HEALTH MONITOR
+    </div>
+    <div class="health-logs-container" id="health-logs-container">
+      <div class="health-log-row alert">
+        <span class="health-tag tag-alert">ALERT</span>
+        <span class="health-text">Commission dropped (12% -> 8.5%) for Shopee #5821</span>
+      </div>
+      <div class="health-log-row warning">
+        <span class="health-tag tag-warning">WARN</span>
+        <span class="health-text">Shopee Product ID #9823 is Out of Stock</span>
+      </div>
+      <div class="health-log-row info">
+        <span class="health-tag tag-info">INFO</span>
+        <span class="health-text">Healthy redirect link active for TikTok campaign #12</span>
+      </div>
+    </div>
   </div>
 
   <!-- ==========================================================================
@@ -907,32 +1292,17 @@
 
     // Render SVG chart line
     function updateLineChart() {
-      const chartWidth = 300;
-      const chartHeight = 50;
-      const maxVal = 100;
-      const xSpacing = chartWidth / (chartPoints.length - 1);
-      
-      const points = chartPoints.map((val, idx) => {
-        const x = idx * xSpacing;
-        const y = chartHeight - 6 - ((val / maxVal) * (chartHeight - 12));
-        return { x, y };
-      });
-      
-      const lineD = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-      const areaD = `${lineD} L ${points[points.length - 1].x.toFixed(1)} ${chartHeight} L 0 ${chartHeight} Z`;
-      
-      document.getElementById('chart-line-path').setAttribute('d', lineD);
-      document.getElementById('chart-area-path').setAttribute('d', areaD);
+      // Line chart replaced by Traffic Donut Chart
     }
 
     // ==========================================================================
     // 2D RANDOM WALKING ENGINE
     // ==========================================================================
     const BOUNDS = {
-      minX: 22, // % of window width
-      maxX: 80, // % of window width
-      minY: 73, // % of window height
-      maxY: 95  // % of window height
+      minX: 25, // % of window width
+      maxX: 75, // % of window width
+      minY: 62, // % of window height
+      maxY: 78  // % of window height
     };
 
     const agentsState = {};
@@ -1310,41 +1680,87 @@
       }, 700);
     }
 
+    const HEALTH_ALERTS_POOL = [
+      { type: 'alert', tag: 'ALERT', text: 'Commission rate dropped for Wireless Earbuds (12% -> 8.5%)' },
+      { type: 'warning', tag: 'WARN', text: 'Shopee item #9823 Ergonomic Chair is low stock (<10 left)' },
+      { type: 'alert', tag: 'ALERT', text: 'Redirection redirect failure detected on TikTok post #42' },
+      { type: 'info', tag: 'INFO', text: 'Shopee Affiliate tracking cookies synced successfully' },
+      { type: 'info', tag: 'INFO', text: 'New post link successfully short-mapped for campaign Reels #3' },
+      { type: 'warning', tag: 'WARN', text: 'High cancellation rates detected on Shopee keyboard campaign #5' },
+      { type: 'alert', tag: 'ALERT', text: 'Shopee Item ID #1042 out of stock. Diverting traffic to alternative.' }
+    ];
+
     // Fluctuating values logic
     function fluctuateMetrics() {
       // Daily revenue fluctuation (฿)
       const revEl = document.getElementById('metric-revenue');
-      let rev = parseFloat(revEl.innerText.replace('฿', '').replace(',', ''));
-      rev += (Math.random() * 20 + 2);
-      revEl.innerText = '฿' + rev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (revEl) {
+        let rev = parseFloat(revEl.innerText.replace('฿', '').replace(',', ''));
+        rev += (Math.random() * 25 + 3);
+        revEl.innerText = '฿' + rev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+        // Update Pending and Approved splits
+        const pendingEl = document.getElementById('metric-pending');
+        const withdrawableEl = document.getElementById('metric-withdrawable');
+        if (pendingEl) {
+          pendingEl.innerText = '฿' + (rev * 0.32).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        if (withdrawableEl) {
+          withdrawableEl.innerText = '฿' + (rev * 0.68).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      }
 
       // Click Logged
       const clickEl = document.getElementById('metric-clicks');
-      let clicks = parseInt(clickEl.innerText.replace(',', ''));
-      clicks += Math.floor(Math.random() * 8 + 1);
-      clickEl.innerText = clicks.toLocaleString();
+      if (clickEl) {
+        let clicks = parseInt(clickEl.innerText.replace(',', ''));
+        clicks += Math.floor(Math.random() * 8 + 1);
+        clickEl.innerText = clicks.toLocaleString();
+        
+        // Update center of donut text
+        const donutText = document.querySelector('.donut-center-val');
+        if (donutText) {
+          donutText.innerText = (clicks / 1000).toFixed(1) + 'k';
+        }
+      }
 
-      // Posts published
-      if (Math.random() > 0.85) {
-        const postEl = document.getElementById('metric-posts');
-        let posts = parseInt(postEl.innerText);
-        posts += 1;
-        postEl.innerText = posts;
+      // CVR and Cancellation
+      const cvrEl = document.getElementById('metric-cvr');
+      const cancellationEl = document.getElementById('metric-cancellation');
+      if (cvrEl) {
+        const cvr = 2.4 + Math.random() * 0.8;
+        cvrEl.innerText = cvr.toFixed(1) + '%';
+      }
+      if (cancellationEl) {
+        const cancel = 1.2 + Math.random() * 0.5;
+        cancellationEl.innerText = cancel.toFixed(1) + '%';
+      }
 
-        // Progress queued tasks list
+      // Cycle tasks and health logs
+      if (Math.random() > 0.8) {
         cycleQueueTaskDynamically();
       }
 
-      // Add point to performance SVG chart
-      const lastVal = chartPoints[chartPoints.length - 1];
-      let newVal = lastVal + (Math.random() * 16 - 8);
-      newVal = Math.max(10, Math.min(95, newVal));
-      
-      chartPoints.push(newVal);
-      if (chartPoints.length > maxChartPoints) {
-        chartPoints.shift();
+      // Trigger a random link health alert log
+      if (Math.random() > 0.85) {
+        const healthContainer = document.getElementById('health-logs-container');
+        if (healthContainer) {
+          const alertItem = HEALTH_ALERTS_POOL[Math.floor(Math.random() * HEALTH_ALERTS_POOL.length)];
+          const row = document.createElement('div');
+          row.className = `health-log-row ${alertItem.type}`;
+          row.innerHTML = `
+            <span class="health-tag tag-${alertItem.type}">${alertItem.tag}</span>
+            <span class="health-text">${alertItem.text}</span>
+          `;
+          healthContainer.appendChild(row);
+          
+          // Clear first nodes to keep list length small
+          const currentRows = healthContainer.getElementsByClassName('health-log-row');
+          if (currentRows.length > 3) {
+            healthContainer.removeChild(currentRows[0]);
+          }
+        }
       }
-      updateLineChart();
     }
 
     // Cycle bottom left pipelines tasks list
