@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopBot HQ - AI Agent Monitor</title>
+  
+  <!-- Retro Game Fonts from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & CORE STYLES
+       ========================================================================== */
+    :root {
+      --bg-navy-dark: #05070e;
+      --bg-panel: rgba(8, 11, 24, 0.88);
+      --bg-panel-header: rgba(14, 20, 39, 0.96);
+      --neon-cyan: #00f0ff;
+      --neon-green: #39ff14;
+      --neon-pink: #ff0055;
+      --neon-yellow: #ffb700;
+      --neon-purple: #bd00ff;
+      --neon-blue: #0070f3;
+      --text-primary: #e2e8f0;
+      --text-secondary: #8a9cb4;
+      --text-dark: #0f172a;
+      
+      --font-header: 'Press Start 2P', cursive, monospace;
+      --font-body: 'Share Tech Mono', monospace;
+
+      --glow-cyan: 0 0 10px rgba(0, 240, 255, 0.4), inset 0 0 8px rgba(0, 240, 255, 0.1);
+      --glow-pink: 0 0 10px rgba(255, 0, 85, 0.4), inset 0 0 8px rgba(255, 0, 85, 0.1);
+      --glow-green: 0 0 10px rgba(57, 255, 20, 0.4), inset 0 0 8px rgba(57, 255, 20, 0.1);
+      --glow-purple: 0 0 10px rgba(189, 0, 255, 0.4), inset 0 0 8px rgba(189, 0, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-navy-dark);
+      background-image: url('image1.png');
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Subtly pulse CRT effect */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.2) 50%
+      );
+      background-size: 100% 4px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* CRT scanlines & light noise overlay */
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 0, 0, 0.5) 100%
+      );
+      z-index: 998;
+      pointer-events: none;
+    }
+
+    /* Scrollbars retro style */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(8, 11, 24, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--neon-cyan);
+      border-radius: 3px;
+      box-shadow: 0 0 5px var(--neon-cyan);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-pink);
+      box-shadow: 0 0 5px var(--neon-pink);
+    }
+
+    /* ==========================================================================
+       2. RETRO GAME UI WINDOWS (PANELS)
+       ========================================================================== */
+    .dashboard-panel {
+      position: absolute;
+      width: 28%;
+      max-width: 380px;
+      min-width: 310px;
+      background: var(--bg-panel);
+      border-radius: 8px;
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Specific neon styling of panels */
+    #panel-agent-status {
+      top: 70px;
+      left: 20px;
+      height: calc(50vh - 60px);
+      max-height: calc(50vh - 60px);
+      border: 2px solid var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+
+    #panel-affiliate-today {
+      top: 70px;
+      right: 20px;
+      height: calc(50vh - 60px);
+      max-height: calc(50vh - 60px);
+      border: 2px solid var(--neon-pink);
+      box-shadow: var(--glow-pink);
+    }
+
+    #panel-content-queue {
+      bottom: 20px;
+      left: 20px;
+      height: calc(50vh - 60px);
+      max-height: calc(50vh - 60px);
+      border: 2px solid var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
+    #panel-team-chat {
+      bottom: 20px;
+      right: 20px;
+      height: calc(50vh - 60px);
+      max-height: calc(50vh - 60px);
+      border: 2px solid var(--neon-purple);
+      box-shadow: var(--glow-purple);
+    }
+
+    /* Panel Collapse overrides */
+    .dashboard-panel.collapsed {
+      max-height: 38px !important;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dashboard-panel.collapsed .panel-body {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Panel Header Style */
+    .panel-header {
+      background: var(--bg-panel-header);
+      padding: 10px 14px;
+      border-bottom: 2px solid var(--border-color, var(--neon-cyan));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    #panel-agent-status .panel-header { --border-color: var(--neon-cyan); }
+    #panel-affiliate-today .panel-header { --border-color: var(--neon-pink); }
+    #panel-content-queue .panel-header { --border-color: var(--neon-green); }
+    #panel-team-chat .panel-header { --border-color: var(--neon-purple); }
+
+    .panel-title {
+      font-family: var(--font-header);
+      font-size: 11px;
+      color: #fff;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 0 5px var(--glow-color, var(--neon-cyan));
+    }
+    #panel-agent-status .panel-title { --glow-color: var(--neon-cyan); }
+    #panel-affiliate-today .panel-title { --glow-color: var(--neon-pink); }
+    #panel-content-queue .panel-title { --glow-color: var(--neon-green); }
+    #panel-team-chat .panel-title { --glow-color: var(--neon-purple); }
+
+    .panel-controls {
+      display: flex;
+      gap: 6px;
+    }
+
+    .control-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+    .control-dot:hover {
+      filter: brightness(1.3);
+    }
+    .control-dot.close { background: var(--neon-pink); }
+    .control-dot.min { background: var(--neon-yellow); }
+    .control-dot.max { background: var(--neon-green); }
+
+    .panel-body {
+      padding: 12px;
+      overflow-y: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: opacity 0.2s;
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       3. PANEL COMPONENTS & INNER CONTENT
+       ========================================================================== */
+    
+    /* Panel 1: Agent Status list */
+    .agent-status-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      padding: 8px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+    .agent-status-item:hover {
+      background: rgba(0, 240, 255, 0.05);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.15);
+    }
+    .agent-info-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    .agent-avatar-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      box-shadow: 0 0 5px var(--agent-color);
+      background-color: var(--agent-color);
+      flex-shrink: 0;
+    }
+    .agent-meta-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      width: 100%;
+    }
+    .agent-mini-name {
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .agent-mini-activity {
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .agent-status-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .agent-status-toggle:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(0, 240, 255, 0.3);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.active { background-color: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
+    .status-dot.idle { background-color: #718096; box-shadow: none; }
+    .status-dot.error { background-color: var(--neon-pink); box-shadow: 0 0 6px var(--neon-pink); }
+    
+    .status-text {
+      font-size: 11px;
+      font-family: var(--font-body);
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    /* Panel 2: Affiliate Metrics */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .metric-row {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid var(--theme-color);
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+    .metric-row.rev { --theme-color: var(--neon-green); }
+    .metric-row.post { --theme-color: var(--neon-cyan); }
+    .metric-row.click { --theme-color: var(--neon-pink); }
+    .metric-row.prod { --theme-color: var(--neon-yellow); grid-column: span 2; }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .metric-val {
+      font-family: var(--font-header);
+      font-size: 12px;
+      color: #fff;
+      margin-top: 5px;
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+    }
+    .metric-val.revenue { color: var(--neon-green); text-shadow: 0 0 6px rgba(57, 255, 20, 0.3); }
+    
+    /* SVG Chart */
+    .chart-container {
+      margin-top: 4px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 0, 85, 0.15);
+      padding: 8px;
+      position: relative;
+    }
+    .chart-title {
+      font-size: 11px;
+      color: var(--neon-pink);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .chart-svg {
+      width: 100%;
+      height: 90px;
+      overflow: visible;
+    }
+    .chart-line {
+      fill: none;
+      stroke: var(--neon-pink);
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 4px rgba(255, 0, 85, 0.6));
+    }
+    .chart-area {
+      fill: url(#chart-gradient);
+      opacity: 0.2;
+    }
+
+    /* Panel 3: Content Queue */
+    .queue-task {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .queue-task:hover {
+      border-color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.03);
+    }
+    .queue-task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .queue-task-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .queue-task-time {
+      font-size: 11px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .queue-task-details {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .badge {
+      font-family: var(--font-header);
+      font-size: 8px;
+      padding: 3px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid;
+      flex-shrink: 0;
+    }
+    .badge.pending {
+      color: var(--neon-yellow);
+      background: rgba(255, 183, 0, 0.08);
+      border-color: rgba(255, 183, 0, 0.25);
+    }
+    .badge.running {
+      color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      border-color: rgba(0, 240, 255, 0.25);
+      animation: pulse-border 1.5s infinite alternate;
+    }
+    .badge.done {
+      color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.08);
+      border-color: rgba(57, 255, 20, 0.25);
+    }
+
+    @keyframes pulse-border {
+      from { box-shadow: 0 0 2px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.25); }
+      to { box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); border-color: rgba(0, 240, 255, 0.7); }
+    }
+
+    /* Panel 4: Team Chat Terminal */
+    .chat-terminal {
+      background: rgba(5, 7, 14, 0.95);
+      border: 1px solid rgba(189, 0, 255, 0.2);
+      border-radius: 6px;
+      flex-grow: 1;
+      padding: 10px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      line-height: 1.4;
+      overflow-y: auto;
+      height: 170px;
+      max-height: 170px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+      margin-bottom: 6px;
+    }
+    .chat-line {
+      animation: slide-in-chat 0.2s ease-out forwards;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      padding-bottom: 4px;
+      word-break: break-word;
+    }
+    @keyframes slide-in-chat {
+      from { transform: translateY(4px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .chat-time {
+      color: var(--text-secondary);
+      font-size: 10px;
+      margin-right: 4px;
+    }
+    .chat-sender {
+      font-weight: bold;
+      margin-right: 6px;
+    }
+    .chat-msg {
+      color: var(--text-primary);
+    }
+
+    /* Colors by Agent */
+    .sender-system { color: #888; }
+    .sender-user { color: #fff; text-shadow: 0 0 4px var(--neon-cyan); }
+    .sender-supervisor { color: var(--neon-yellow); }
+    .sender-productFinder { color: var(--neon-green); }
+    .sender-clipSelector { color: var(--neon-purple); }
+    .sender-videoMaker { color: var(--neon-pink); }
+    .sender-captionWriter { color: var(--neon-cyan); }
+    .sender-postAgent { color: #ff00ea; }
+    .sender-analyticsAgent { color: #00ffbc; }
+
+    /* Interactive Chat input */
+    .chat-input-container {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(189, 0, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .chat-prompt {
+      color: var(--neon-purple);
+      padding: 6px 4px 6px 10px;
+      font-family: var(--font-body);
+      font-weight: bold;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+    }
+    .chat-input {
+      flex-grow: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 12px;
+      padding: 6px 8px;
+    }
+    .chat-send-btn {
+      background: rgba(189, 0, 255, 0.15);
+      border: none;
+      border-left: 1px solid rgba(189, 0, 255, 0.2);
+      color: var(--neon-purple);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: bold;
+      padding: 0 12px;
+      transition: all 0.2s;
+    }
+    .chat-send-btn:hover {
+      background: rgba(189, 0, 255, 0.3);
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       4. CENTER CHARACTERS WALKING ZONE
+       ========================================================================== */
+    
+    /* Horizontal Walk floor zone wrapper */
+    #floor-zone {
+      position: absolute;
+      bottom: 80px; /* Align within background scene floor */
+      left: 0;
+      width: 100%;
+      height: 220px;
+      z-index: 50; /* Sits behind panels (100) but above background */
+      overflow: visible;
+      pointer-events: none; /* Let clicks pass through to background */
+    }
+
+    .agent-character {
+      position: absolute;
+      width: 80px;
+      height: 130px;
+      cursor: pointer;
+      pointer-events: auto; /* Enable hover/clicks on character */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      transform-origin: bottom center;
+      transition: transform 0.05s linear, opacity 0.3s;
+    }
+
+    /* Character animations states */
+    .agent-character.walking .character-visual {
+      animation: waddle-cycle 0.6s infinite alternate ease-in-out;
+    }
+    .agent-character.idling .character-visual {
+      animation: breathe-cycle 1.6s infinite alternate ease-in-out;
+    }
+    .agent-character.error-state .character-visual {
+      animation: glitch-shake-cycle 0.12s infinite;
+      filter: drop-shadow(0 0 10px var(--neon-pink)) saturate(1.8);
+    }
+
+    @keyframes waddle-cycle {
+      0% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-7px) rotate(0deg); }
+      100% { transform: translateY(0) rotate(4deg); }
+    }
+    @keyframes breathe-cycle {
+      0% { transform: translateY(0) scaleY(1); }
+      100% { transform: translateY(-3px) scaleY(0.96); }
+    }
+    @keyframes glitch-shake-cycle {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -1px) rotate(-1deg); }
+      20% { transform: translate(-2px, 0px) rotate(1deg); }
+      30% { transform: translate(1px, 2px) rotate(0deg); }
+      40% { transform: translate(-1px, -1px) rotate(1deg); }
+      50% { transform: translate(-2px, 0px) rotate(-1deg); }
+      60% { transform: translate(1px, 1px) rotate(0deg); }
+      70% { transform: translate(-1px, -1px) rotate(1deg); }
+      80% { transform: translate(-2px, 0px) rotate(-1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(-1px, -1px) rotate(0deg); }
+    }
+
+    /* floating labels above head */
+    .name-tag-wrapper {
+      position: absolute;
+      top: -30px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(8, 11, 24, 0.9);
+      border: 1px solid var(--agent-color, var(--neon-cyan));
+      padding: 3px 8px;
+      border-radius: 20px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 0 6px var(--agent-color);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .name-tag {
+      font-size: 11px;
+      color: #fff;
+      font-weight: bold;
+      font-family: var(--font-body);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .character-visual {
+      width: 72px;
+      height: 100px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .sprite-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+
+    /* Fallback animated SVG styles */
+    .svg-fallback-wrapper {
+      width: 100%;
+      height: 100%;
+    }
+    .svg-fallback {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .agent-character.walking .svg-fallback .leg-l {
+      animation: leg-swing-cycle 0.4s infinite alternate ease-in-out;
+    }
+    .agent-character.walking .svg-fallback .leg-r {
+      animation: leg-swing-cycle 0.4s infinite alternate-reverse ease-in-out;
+    }
+    .agent-character.walking .svg-fallback .body-group {
+      animation: body-bounce-cycle 0.4s infinite alternate ease-in-out;
+    }
+
+    @keyframes leg-swing-cycle {
+      0% { transform: rotate(-25deg); }
+      100% { transform: rotate(25deg); }
+    }
+    @keyframes body-bounce-cycle {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+
+    /* Flip CSS class when direction is left */
+    .agent-character.flip .character-visual {
+      transform: scaleX(-1);
+    }
+
+    /* Hover stop & glow */
+    .agent-character:hover {
+      filter: drop-shadow(0 0 8px var(--agent-color, var(--neon-cyan)));
+    }
+
+    /* Speech bubbles */
+    .speech-bubble {
+      position: absolute;
+      top: -110px;
+      background: #fff;
+      color: var(--text-dark);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.3;
+      width: 180px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      z-index: 500;
+      opacity: 0;
+      transform: scale(0.8) translateY(10px);
+      transition: opacity 0.2s, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid var(--text-dark);
+      pointer-events: none;
+      text-align: center;
+      font-family: var(--font-body);
+      font-weight: bold;
+    }
+
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: #fff transparent;
+      display: block;
+      width: 0;
+    }
+
+    .speech-bubble::before {
+      content: "";
+      position: absolute;
+      bottom: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 11px 11px 0;
+      border-style: solid;
+      border-color: var(--text-dark) transparent;
+      display: block;
+      width: 0;
+      z-index: -1;
+    }
+
+    .speech-bubble.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    /* HUD Header overlay */
+    .header-hud {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      height: 60px;
+      background: linear-gradient(to bottom, rgba(5, 7, 14, 0.95) 0%, rgba(5, 7, 14, 0.9) 60%, rgba(5, 7, 14, 0) 100%);
+      z-index: 90;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .hud-title-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hud-logo {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
+      border-radius: 4px;
+      background-color: var(--bg-navy-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-header);
+      font-size: 10px;
+      color: var(--neon-cyan);
+      animation: logo-pulse 2s infinite alternate;
+    }
+
+    @keyframes logo-pulse {
+      from { box-shadow: 0 0 4px var(--neon-cyan); }
+      to { box-shadow: 0 0 10px var(--neon-cyan); }
+    }
+
+    .hud-title {
+      font-family: var(--font-header);
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      color: #fff;
+      text-shadow: 0 0 8px var(--neon-cyan), 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    /* HUD Quick Actions toolbar */
+    .hud-toolbar {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .hud-btn {
+      background: rgba(14, 20, 39, 0.85);
+      border: 1px solid var(--neon-cyan);
+      box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+      color: var(--neon-cyan);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+
+    .hud-btn:hover {
+      background: var(--neon-cyan);
+      color: var(--text-dark);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
+    
+    .hud-btn.pink {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+      box-shadow: 0 0 5px rgba(255, 0, 85, 0.2);
+    }
+    .hud-btn.pink:hover {
+      background: var(--neon-pink);
+      color: #fff;
+      box-shadow: 0 0 10px var(--neon-pink);
+    }
+
+    /* ==========================================================================
+       5. ASSET INSPECTOR MODAL
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-window {
+      width: 80%;
+      max-width: 700px;
+      background: var(--bg-panel-header);
+      border: 2px solid var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modal-zoom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes modal-zoom {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--neon-cyan);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-family: var(--font-header);
+      font-size: 12px;
+      color: #fff;
+      text-shadow: 0 0 5px var(--neon-cyan);
+    }
+    .modal-close {
+      color: var(--neon-pink);
+      cursor: pointer;
+      font-family: var(--font-header);
+      font-size: 12px;
+    }
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 450px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .modal-tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      border-bottom: 2px solid transparent;
+    }
+    .modal-tab.active {
+      color: var(--neon-cyan);
+      border-bottom-color: var(--neon-cyan);
+      font-weight: bold;
+    }
+    .modal-content-panel {
+      display: none;
+    }
+    .modal-content-panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .modal-img-preview {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.1);
+      background-color: #000;
+      border-radius: 4px;
+      max-height: 250px;
+      object-fit: contain;
+    }
+    .modal-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .modal-code-link {
+      color: var(--neon-cyan);
+      text-decoration: none;
+    }
+    .modal-code-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       6. RESPONSIVE NAVIGATION & LAYOUTS (MOBILE DOCK)
+       ========================================================================== */
+    .mobile-dock {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: var(--bg-panel-header);
+      border-top: 3px solid var(--neon-cyan);
+      box-shadow: 0 -2px 15px rgba(0,240,255,0.25);
+      z-index: 1000;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .dock-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 12px;
+      cursor: pointer;
+      flex: 1;
+      height: 100%;
+      transition: all 0.2s;
+      border-right: 1px solid rgba(0,240,255,0.1);
+      gap: 4px;
+    }
+
+    .dock-tab:last-child {
+      border-right: none;
+    }
+
+    .dock-tab-icon {
+      font-family: var(--font-header);
+      font-size: 10px;
+      color: var(--neon-cyan);
+    }
+
+    .dock-tab.active {
+      background: rgba(0,240,255,0.15);
+      color: #fff;
+      text-shadow: 0 0 4px var(--neon-cyan);
+      border-top: 2px solid var(--neon-cyan);
+    }
+
+    /* Mobile Overlays */
+    @media (max-width: 768px) {
+      .hud-toolbar {
+        display: none; /* Hide top menu buttons on tiny screens */
+      }
+      .hud-title {
+        font-size: 12px;
+      }
+      
+      .dashboard-panel {
+        display: none;
+        width: 90% !important;
+        max-width: 90% !important;
+        position: fixed !important;
+        top: 80px !important;
+        left: 5% !important;
+        bottom: 80px !important;
+        height: auto !important;
+        max-height: calc(100vh - 160px) !important;
+        z-index: 1100 !important;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
+      }
+
+      .dashboard-panel.mobile-visible {
+        display: flex !important;
+        animation: panel-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes panel-pop {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+
+      .mobile-dock {
+        display: flex;
+      }
+
+      #floor-zone {
+        bottom: 120px;
+        height: 180px;
+      }
+
+      .agent-character {
+        width: 60px;
+        height: 110px;
+      }
+      
+      .character-visual {
+        width: 54px;
+        height: 80px;
+      }
+
+      .speech-bubble {
+        width: 140px;
+        font-size: 10px;
+        top: -85px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Retro Screen Overlay HUD Title Bar -->
+  <header class="header-hud">
+    <div class="hud-title-container">
+      <div class="hud-logo">SB</div>
+      <div class="hud-title">&gt; SHOPBOT HQ // MONITOR &lt;</div>
+    </div>
+    <div class="hud-toolbar">
+      <button class="hud-btn" onclick="openModal()">Asset Inspector</button>
+      <button class="hud-btn pink" onclick="triggerManualChat()">Force Comms</button>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       DASHBOARD PANELS (FLOATING EDGES)
+       ========================================================================== -->
+
+  <!-- Panel 1: Agent Status (Top Left) -->
+  <div class="dashboard-panel" id="panel-agent-status">
+    <div class="panel-header" onclick="togglePanel('panel-agent-status')">
+      <div class="panel-title">
+        <span class="status-dot active"></span> SYSTEM_AGENTS.LOG
+      </div>
+      <div class="panel-controls">
+        <div class="control-dot close" onclick="togglePanel('panel-agent-status'); event.stopPropagation();"></div>
+        <div class="control-dot min" onclick="togglePanel('panel-agent-status'); event.stopPropagation();"></div>
+        <div class="control-dot max" onclick="togglePanel('panel-agent-status'); event.stopPropagation();"></div>
+      </div>
+    </div>
+    <div class="panel-body" id="agent-status-list">
+      <!-- Generated Dynamically by JS -->
+    </div>
+  </div>
+
+  <!-- Panel 2: Affiliate Today (Top Right) -->
+  <div class="dashboard-panel" id="panel-affiliate-today">
+    <div class="panel-header" onclick="togglePanel('panel-affiliate-today')">
+      <div class="panel-title">
+        ⚡ AFFILIATE_STATS.HUD
+      </div>
+      <div class="panel-controls">
+        <div class="control-dot close" onclick="togglePanel('panel-affiliate-today'); event.stopPropagation();"></div>
+        <div class="control-dot min" onclick="togglePanel('panel-affiliate-today'); event.stopPropagation();"></div>
+        <div class="control-dot max" onclick="togglePanel('panel-affiliate-today'); event.stopPropagation();"></div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="metric-grid">
+        <div class="metric-row rev">
+          <span class="metric-label">Daily Revenue</span>
+          <span class="metric-val revenue" id="metric-revenue">฿3,450.00</span>
+        </div>
+        <div class="metric-row post">
+          <span class="metric-label">Posts Published</span>
+          <span class="metric-val" id="metric-posts">34</span>
+        </div>
+        <div class="metric-row click">
+          <span class="metric-label">Clicks Logged</span>
+          <span class="metric-val" id="metric-clicks">2,109</span>
+        </div>
+        <div class="metric-row prod">
+          <span class="metric-label">Top Affiliate Product</span>
+          <span class="metric-val" id="metric-top-product" style="font-size:12px; color: var(--neon-yellow);">Dual-Lens Dashcam</span>
+        </div>
+      </div>
+
+      <!-- Live Line Chart -->
+      <div class="chart-container">
+        <div class="chart-title">Real-Time Performance CTR</div>
+        <svg class="chart-svg" viewBox="0 0 300 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ff0055" />
+              <stop offset="100%" stop-color="#ff0055" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <!-- Grid Lines -->
+          <line x1="0" y1="20" x2="300" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="45" x2="300" y2="45" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="70" x2="300" y2="70" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <!-- Chart Paths -->
+          <path class="chart-area" d="" id="chart-area-path" />
+          <path class="chart-line" d="" id="chart-line-path" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Content Queue (Bottom Left) -->
+  <div class="dashboard-panel" id="panel-content-queue">
+    <div class="panel-header" onclick="togglePanel('panel-content-queue')">
+      <div class="panel-title">
+        ⚙️ QUEUED_PIPELINES.SYS
+      </div>
+      <div class="panel-controls">
+        <div class="control-dot close" onclick="togglePanel('panel-content-queue'); event.stopPropagation();"></div>
+        <div class="control-dot min" onclick="togglePanel('panel-content-queue'); event.stopPropagation();"></div>
+        <div class="control-dot max" onclick="togglePanel('panel-content-queue'); event.stopPropagation();"></div>
+      </div>
+    </div>
+    <div class="panel-body" id="content-queue-list">
+      <!-- Generated Dynamically by JS -->
+    </div>
+  </div>
+
+  <!-- Panel 4: Team Chat Panel (Bottom Right) -->
+  <div class="dashboard-panel" id="panel-team-chat">
+    <div class="panel-header" onclick="togglePanel('panel-team-chat')">
+      <div class="panel-title">
+        💬 CORE_TEAM_CHAT.FEED
+      </div>
+      <div class="panel-controls">
+        <div class="control-dot close" onclick="togglePanel('panel-team-chat'); event.stopPropagation();"></div>
+        <div class="control-dot min" onclick="togglePanel('panel-team-chat'); event.stopPropagation();"></div>
+        <div class="control-dot max" onclick="togglePanel('panel-team-chat'); event.stopPropagation();"></div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chat-terminal" id="terminal-feed">
+        <!-- Generated Dynamically by JS -->
+      </div>
+      <!-- Interactive Terminal Input -->
+      <form id="chat-input-form" onsubmit="handleChatSubmit(event)">
+        <div class="chat-input-container">
+          <div class="chat-prompt">&gt;</div>
+          <input type="text" class="chat-input" id="terminal-input" placeholder="Type command (e.g. status, active)..." autocomplete="off">
+          <button type="submit" class="chat-send-btn">SEND</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       CENTER WALKING ZONE
+       ========================================================================== -->
+  <div id="floor-zone">
+    <!-- AI Characters walking sprites injected here by JS -->
+  </div>
+
+  <!-- ==========================================================================
+       MOBILE RESPONSIVE DOCK
+       ========================================================================== -->
+  <div class="mobile-dock">
+    <div class="dock-tab active" onclick="activateMobileTab('panel-agent-status', this)">
+      <span class="dock-tab-icon">■</span>
+      <span>STATUS</span>
+    </div>
+    <div class="dock-tab" onclick="activateMobileTab('panel-affiliate-today', this)">
+      <span class="dock-tab-icon">▲</span>
+      <span>STATS</span>
+    </div>
+    <div class="dock-tab" onclick="activateMobileTab('panel-content-queue', this)">
+      <span class="dock-tab-icon">◆</span>
+      <span>QUEUE</span>
+    </div>
+    <div class="dock-tab" onclick="activateMobileTab('panel-team-chat', this)">
+      <span class="dock-tab-icon">●</span>
+      <span>CHAT</span>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       ASSETS SOURCE MODAL
+       ========================================================================== -->
+  <div class="modal-overlay" id="assets-modal" onclick="closeModal(event)">
+    <div class="modal-window" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">ASSET REFERENCE INSPECTOR</div>
+        <div class="modal-close" onclick="closeModal()">&times; CLOSE</div>
+      </div>
+      <div class="modal-tabs">
+        <div class="modal-tab active" onclick="switchModalTab('tab-bg', this)">BG (Image 1)</div>
+        <div class="modal-tab" onclick="switchModalTab('tab-sprites', this)">Sprites (Image 2)</div>
+        <div class="modal-tab" onclick="switchModalTab('tab-ui', this)">UI Reference (Image 3)</div>
+      </div>
+      <div class="modal-body">
+        <!-- BG Tab -->
+        <div class="modal-content-panel active" id="tab-bg">
+          <img class="modal-img-preview" src="image1.png" alt="Office Background">
+          <div class="modal-meta">
+            <strong>Filename:</strong> <a class="modal-code-link" href="image1.png" target="_blank">image1.png</a><br>
+            <strong>Role:</strong> Fixed full-screen retro office environment scenery. Coordinates walking boundaries to ensure agents remain grounded on the pixel-art wooden floor.
+          </div>
+        </div>
+        <!-- Sprites Tab -->
+        <div class="modal-content-panel" id="tab-sprites">
+          <img class="modal-img-preview" src="image2.png" alt="Spritesheet Source">
+          <div class="modal-meta">
+            <strong>Filename:</strong> <a class="modal-code-link" href="image2.png" target="_blank">image2.png</a><br>
+            <strong>Role:</strong> Raw chibi character spritesheet. Automatically sliced via background processes into 7 separate, transparent-background agent PNG layers (e.g. <code>char_supervisor.png</code>) to enable smooth canvas/CSS waddling.
+          </div>
+        </div>
+        <!-- UI Reference Tab -->
+        <div class="modal-content-panel" id="tab-ui">
+          <img class="modal-img-preview" src="image3.png" alt="UI reference">
+          <div class="modal-meta">
+            <strong>Filename:</strong> <a class="modal-code-link" href="image3.png" target="_blank">image3.png</a><br>
+            <strong>Role:</strong> Aesthetic reference target. Guides border colors, typography styling, rounded card panels, and neon glow layout design.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC & WALKING PHYSICS
+       ========================================================================== -->
+  <script>
+    // ==========================================================================
+    // DATA DECLARATIONS
+    // ==========================================================================
+    
+    // Character definition & styling details
+    const AGENTS_CONFIG = {
+      supervisor: {
+        id: 'supervisor',
+        name: 'Supervisor',
+        color: '#ffb700', // Neon Yellow
+        speed: 1.2,
+        status: 'active', // active, idle, error
+        yOffset: 0.15, // vertical layering bottom offset
+        lastActivity: 'Monitoring overall operations',
+        tasks: [
+          "Checking overall system telemetry...",
+          "Assigning product hunt parameters...",
+          "Analyzing team throughput reports...",
+          "Optimizing worker distribution channels."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#ffd200" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#ffd200" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#1b1c2b" stroke="#ffd200" stroke-width="3" rx="8">
+            <rect x="22" y="32" width="20" height="12" fill="#2d3748" rx="2"/>
+            <circle cx="27" cy="38" r="2" fill="#ffd200"/>
+            <circle cx="37" cy="38" r="2" fill="#00f0ff"/>
+            <rect x="24" y="52" width="16" height="4" fill="#ffd200"/>
+          </rect>
+          <path d="M 20 24 L 20 8 L 26 14 L 32 8 L 38 14 L 44 8 L 44 24 Z" fill="#ffd200"/>
+          <circle cx="32" cy="18" r="3" fill="#ff0055"/>
+        </svg>`
+      },
+      productFinder: {
+        id: 'productFinder',
+        name: 'Product Finder',
+        color: '#39ff14', // Neon Green
+        speed: 1.0,
+        status: 'active',
+        yOffset: 0.35,
+        lastActivity: 'Scraping Shopee trends',
+        tasks: [
+          "Searching Shopee for trending keywords...",
+          "Comparing product conversion metrics...",
+          "Scraping ratings for kitchen items...",
+          "Filtering high CTR electronic listing."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#39ff14" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#39ff14" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#112211" stroke="#39ff14" stroke-width="3" rx="6">
+            <rect x="20" y="30" width="24" height="14" fill="#00ff88" opacity="0.8" rx="3"/>
+            <circle cx="32" cy="54" r="5" stroke="#39ff14" stroke-width="2" fill="none"/>
+            <line x1="36" y1="58" x2="42" y2="64" stroke="#39ff14" stroke-width="2"/>
+          </rect>
+        </svg>`
+      },
+      clipSelector: {
+        id: 'clipSelector',
+        name: 'Clip Selector',
+        color: '#bd00ff', // Neon Purple
+        speed: 0.8,
+        status: 'active',
+        yOffset: 0.2,
+        lastActivity: 'Cutting product raw footage',
+        tasks: [
+          "Analyzing clip hook potential...",
+          "Cropping to portrait video aspect...",
+          "Selecting video highlight frames...",
+          "Optimizing audio waveform cues."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#bd00ff" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#bd00ff" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#201130" stroke="#bd00ff" stroke-width="3" rx="6">
+            <polygon points="20,32 44,32 40,44 24,44" fill="#ff00ea"/>
+            <circle cx="28" cy="54" r="3" stroke="#bd00ff" stroke-width="1.5" fill="none"/>
+            <circle cx="36" cy="54" r="3" stroke="#bd00ff" stroke-width="1.5" fill="none"/>
+            <line x1="32" y1="54" x2="32" y2="64" stroke="#bd00ff" stroke-width="2"/>
+          </rect>
+        </svg>`
+      },
+      videoMaker: {
+        id: 'videoMaker',
+        name: 'Video Maker',
+        color: '#ff0055', // Neon Pink
+        speed: 1.4,
+        status: 'active',
+        yOffset: 0.45,
+        lastActivity: 'Blending overlay sequences',
+        tasks: [
+          "Rendering 1080p affiliate video...",
+          "Applying dynamic caption overlays...",
+          "Adding glowing visual text animations...",
+          "Stitching frames with neon transitions."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#ff0055" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#ff0055" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#300a18" stroke="#ff0055" stroke-width="3" rx="6">
+            <circle cx="32" cy="40" r="8" fill="#ff0055" opacity="0.3"/>
+            <circle cx="32" cy="40" r="4" fill="#fff"/>
+            <rect x="22" y="55" width="20" height="6" fill="#ff0055" rx="1"/>
+          </rect>
+        </svg>`
+      },
+      captionWriter: {
+        id: 'captionWriter',
+        name: 'Caption Writer',
+        color: '#00f0ff', // Neon Cyan
+        speed: 0.9,
+        status: 'active',
+        yOffset: 0.1,
+        lastActivity: 'Drafting viral hooks',
+        tasks: [
+          "Generating engagement captions...",
+          "Injecting SEO keywords into post...",
+          "Testing CTA emoji distributions...",
+          "Matching hashtags with TikTok trends."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#00f0ff" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#00f0ff" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#0a2530" stroke="#00f0ff" stroke-width="3" rx="6">
+            <rect x="22" y="34" width="20" height="12" fill="#00f0ff" rx="2"/>
+            <polygon points="26,46 30,46 26,50" fill="#00f0ff"/>
+            <rect x="26" y="38" width="12" height="2" fill="#070913"/>
+            <rect x="26" y="42" width="8" height="2" fill="#070913"/>
+          </rect>
+        </svg>`
+      },
+      postAgent: {
+        id: 'postAgent',
+        name: 'Post Agent',
+        color: '#ff00ea', // Magenta
+        speed: 1.3,
+        status: 'idle',
+        yOffset: 0.25,
+        lastActivity: 'Awaiting next queue upload',
+        tasks: [
+          "Checking target publication times...",
+          "Running metadata security pass...",
+          "Publishing media to TikTok API...",
+          "Verifying affiliate URL clickability."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#ff00ea" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#ff00ea" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#2d0529" stroke="#ff00ea" stroke-width="3" rx="6">
+            <polygon points="32,32 24,42 30,42 30,56 34,56 34,42 40,42" fill="#ff00ea"/>
+          </rect>
+        </svg>`
+      },
+      analyticsAgent: {
+        id: 'analyticsAgent',
+        name: 'Analytics Agent',
+        color: '#00ffbc', // Emerald Green
+        speed: 1.1,
+        status: 'active',
+        yOffset: 0.4,
+        lastActivity: 'Recalculating ROI metrics',
+        tasks: [
+          "Polling video click performance...",
+          "Auditing affiliate payout logs...",
+          "Aggregating weekly analytics matrices...",
+          "Compiling CTR increase graphs."
+        ],
+        svg: `<svg viewBox="0 0 64 90" class="svg-fallback">
+          <rect class="leg-l" x="22" y="70" width="6" height="15" fill="#00ffbc" rx="3"/>
+          <rect class="leg-r" x="36" y="70" width="6" height="15" fill="#00ffbc" rx="3"/>
+          <rect class="body-group" x="16" y="24" width="32" height="48" fill="#052d21" stroke="#00ffbc" stroke-width="3" rx="6">
+            <rect x="22" y="46" width="4" height="10" fill="#00ffbc"/>
+            <rect x="28" y="38" width="4" height="18" fill="#00ffbc"/>
+            <rect x="34" y="42" width="4" height="14" fill="#00ffbc"/>
+            <rect x="40" y="34" width="4" height="22" fill="#00ffbc"/>
+          </rect>
+        </svg>`
+      }
+    };
+
+    // Affiliate Tasks Queue mock data
+    const INITIAL_QUEUE_TASKS = [
+      { id: 1, title: 'Extract top tech products', time: '12:20', details: 'Product Finder listing trending items.', status: 'done' },
+      { id: 2, title: 'Cut hooks for Video #02', time: '12:22', details: 'Clip Selector isolating high CTR clips.', status: 'done' },
+      { id: 3, title: 'Compile dashcam promo', time: '12:24', details: 'Video Maker rendering audio layout.', status: 'running' },
+      { id: 4, title: 'Write optimized viral hook', time: '12:25', details: 'Caption Writer drafting copywriting.', status: 'pending' },
+      { id: 5, title: 'Schedule to TikTok Feed', time: '12:30', details: 'Post Agent awaiting media assets.', status: 'pending' }
+    ];
+
+    // Live automatic dialogue story matrix
+    const AGENTS_CHATTER = [
+      { sender: 'supervisor', msg: "Team check: report current affiliate workflows." },
+      { sender: 'productFinder', msg: "Scraped top 5 dashcams from Shopee. CTR potential is high! 📈" },
+      { sender: 'clipSelector', msg: "Got the high-resolution dashboard footage. Initiating cutting. ✂️" },
+      { sender: 'videoMaker', msg: "Applying cyberpunk light overlays to Product #2 promo video. 🎬" },
+      { sender: 'captionWriter', msg: "Captions ready! 'Must-have car gadget 2026' + viral affiliate tags. ✍️" },
+      { sender: 'postAgent', msg: "Queue received. Scheduling upload targeting afternoon rush hour! ⏰" },
+      { sender: 'analyticsAgent', msg: "Conversion audit: Dual-lens cameras CTR jumped by 14% this morning! ฿฿฿" },
+      { sender: 'supervisor', msg: "Outstanding. Product Finder, seek next trending category." },
+      { sender: 'productFinder', msg: "Beginning query scan for ergonomic office chairs... 🔍" },
+      { sender: 'videoMaker', msg: "Render complete. Shipping assets to Caption Writer. 🚢" },
+      { sender: 'captionWriter', msg: "Copy matched. Passing bundle to Post Agent. 🚀" },
+      { sender: 'postAgent', msg: "Successfully uploaded to TikTok! Link active! ✓" },
+      { sender: 'analyticsAgent', msg: "Telemetry report: Team output rate is at 98.7% peak efficiency." }
+    ];
+
+    // Statuses helper array
+    const STATUS_STATES = ['active', 'idle', 'error'];
+
+    // Chart performance state
+    const chartPoints = [25, 45, 30, 60, 50, 75, 55, 68, 80, 72, 85];
+    const maxChartPoints = 15;
+
+    // Active speech bubbles list
+    let activeBubbles = [];
+    const maxActiveBubbles = 2;
+    const activeAgents = {};
+    const bubbleTimeouts = {};
+
+    // ==========================================================================
+    // INITIALIZATION & RENDER FUNCTIONS
+    // ==========================================================================
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialize UI elements
+      renderAgentStatusPanel();
+      renderContentQueuePanel();
+      updateLineChart();
+      
+      // 2. Initialize Characters
+      initCharacters();
+
+      // 3. Start walking loop
+      requestAnimationFrame(walkEngineUpdate);
+
+      // 4. Start automatic randomized dialog ticker (every 5 to 8 seconds)
+      scheduleNextAutoChat();
+      
+      // Fire an initial system chat line
+      addTerminalChatLine('system', 'System interface initialized. Monitoring 7 active subagents.', getFormattedTime());
+      setTimeout(() => {
+        triggerSpecificChat(0);
+      }, 1000);
+    });
+
+    // Toggle Panel Minimize / Collapse
+    function togglePanel(panelId) {
+      if (window.innerWidth <= 768) return; // Ignore on mobile to allow dock tab overlays
+      
+      const panel = document.getElementById(panelId);
+      panel.classList.toggle('collapsed');
+    }
+
+    // Mobile Dock Panel Selector
+    function activateMobileTab(panelId, tabElement) {
+      // Clear active class on all tabs
+      document.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+      tabElement.classList.add('active');
+
+      // Hide all panels
+      document.querySelectorAll('.dashboard-panel').forEach(p => {
+        p.classList.remove('mobile-visible');
+      });
+
+      // Show selected panel
+      const targetPanel = document.getElementById(panelId);
+      targetPanel.classList.add('mobile-visible');
+    }
+
+    // Render Status panel
+    function renderAgentStatusPanel() {
+      const container = document.getElementById('agent-status-list');
+      container.innerHTML = '';
+      
+      Object.keys(AGENTS_CONFIG).forEach(key => {
+        const config = AGENTS_CONFIG[key];
+        const item = document.createElement('div');
+        item.className = 'agent-status-item';
+        item.id = `status-item-${config.id}`;
+        
+        item.innerHTML = `
+          <div class="agent-info-left">
+            <div class="agent-avatar-indicator" style="--agent-color: ${config.color}"></div>
+            <div class="agent-meta-details">
+              <div class="agent-mini-name">${config.name}</div>
+              <div class="agent-mini-activity" id="activity-text-${config.id}">${config.lastActivity}</div>
+            </div>
+          </div>
+          <div class="agent-status-toggle" onclick="cycleAgentStatus('${config.id}')">
+            <span class="status-dot ${config.status}" id="status-dot-${config.id}"></span>
+            <span class="status-text" id="status-txt-${config.id}">${config.status}</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Render Content Queue
+    function renderContentQueuePanel() {
+      const container = document.getElementById('content-queue-list');
+      container.innerHTML = '';
+      
+      INITIAL_QUEUE_TASKS.forEach(task => {
+        const el = document.createElement('div');
+        el.className = 'queue-task';
+        
+        el.innerHTML = `
+          <div class="queue-task-header">
+            <span class="queue-task-title">${task.title}</span>
+            <span class="badge ${task.status}">${task.status}</span>
+          </div>
+          <div class="queue-task-header" style="margin-top:2px;">
+            <span class="queue-task-details">${task.details}</span>
+            <span class="queue-task-time">${task.time}</span>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    // Render/update real-time performance SVG line chart
+    function updateLineChart() {
+      const chartWidth = 300;
+      const chartHeight = 90;
+      const maxVal = 100;
+      
+      const xSpacing = chartWidth / (chartPoints.length - 1);
+      
+      // Build SVG coordinates
+      const points = chartPoints.map((val, idx) => {
+        const x = idx * xSpacing;
+        const y = chartHeight - 10 - ((val / maxVal) * (chartHeight - 20)); // scale height with pad padding
+        return { x, y };
+      });
+      
+      const lineD = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+      const areaD = `${lineD} L ${points[points.length - 1].x.toFixed(1)} ${chartHeight} L 0 ${chartHeight} Z`;
+      
+      document.getElementById('chart-line-path').setAttribute('d', lineD);
+      document.getElementById('chart-area-path').setAttribute('d', areaD);
+    }
+
+    // Cycle Status through Active -> Idle -> Error -> Active
+    function cycleAgentStatus(agentId) {
+      const currentStatus = AGENTS_CONFIG[agentId].status;
+      const nextIndex = (STATUS_STATES.indexOf(currentStatus) + 1) % STATUS_STATES.length;
+      const nextStatus = STATUS_STATES[nextIndex];
+      
+      AGENTS_CONFIG[agentId].status = nextStatus;
+      
+      // Update UI Status list
+      const dot = document.getElementById(`status-dot-${agentId}`);
+      const txt = document.getElementById(`status-txt-${agentId}`);
+      if (dot) dot.className = `status-dot ${nextStatus}`;
+      if (txt) txt.innerText = nextStatus;
+
+      // Update Character indicator & state animation styles
+      const charEl = document.getElementById(`agent-${agentId}`);
+      if (charEl) {
+        const charDot = charEl.querySelector('.char-status-dot');
+        if (charDot) {
+          charDot.className = `status-dot char-status-dot ${nextStatus}`;
+        }
+        
+        // Remove animation classes
+        charEl.classList.remove('walking', 'idling', 'error-state');
+        
+        // Match status to animations classes
+        if (nextStatus === 'active') {
+          charEl.classList.add('walking');
+        } else if (nextStatus === 'idle') {
+          charEl.classList.add('idling');
+        } else if (nextStatus === 'error') {
+          charEl.classList.add('error-state');
+        }
+      }
+
+      // Add audit message to terminal log
+      const timeStr = getFormattedTime();
+      addTerminalChatLine('system', `Agent ${AGENTS_CONFIG[agentId].name} state changed to [${nextStatus.toUpperCase()}].`, timeStr);
+
+      // Randomize activity based on status
+      const textEl = document.getElementById(`activity-text-${agentId}`);
+      if (textEl) {
+        if (nextStatus === 'active') {
+          AGENTS_CONFIG[agentId].lastActivity = 'Resuming walking telemetry.';
+        } else if (nextStatus === 'idle') {
+          AGENTS_CONFIG[agentId].lastActivity = 'Idling thread in background.';
+        } else {
+          AGENTS_CONFIG[agentId].lastActivity = 'CRITICAL: Task thread halted.';
+        }
+        textEl.innerText = AGENTS_CONFIG[agentId].lastActivity;
+      }
+    }
+
+    // Initialize character entities on floor zone
+    function initCharacters() {
+      const floor = document.getElementById('floor-zone');
+      floor.innerHTML = '';
+
+      Object.keys(AGENTS_CONFIG).forEach((key, index) => {
+        const config = AGENTS_CONFIG[key];
+        
+        // Create container div
+        const char = document.createElement('div');
+        
+        // Set initial classes based on status
+        let stateClass = 'walking';
+        if (config.status === 'idle') stateClass = 'idling';
+        if (config.status === 'error') stateClass = 'error-state';
+        char.className = `agent-character ${stateClass}`;
+        char.id = `agent-${config.id}`;
+        
+        // Layer depth calculations based on config yOffset
+        const bottomOffset = 15 + (config.yOffset * 90); // ranges from 15px to 105px offset
+        char.style.bottom = `${bottomOffset}px`;
+        char.style.zIndex = Math.floor(bottomOffset);
+
+        // Spawn position horizontal spacing
+        const leftBoundary = window.innerWidth * 0.28;
+        const rightBoundary = window.innerWidth * 0.72;
+        const range = rightBoundary - leftBoundary;
+        
+        // Distribute starting positions evenly across wood floor, plus random jitter
+        const startX = leftBoundary + (index * (range / 7)) + (Math.random() * 20 - 10);
+        char.style.left = `${startX}px`;
+
+        // Physics telemetry parameters
+        activeAgents[config.id] = {
+          element: char,
+          id: config.id,
+          x: startX,
+          width: 80,
+          speed: config.speed + (Math.random() * 0.15 - 0.075), // subtle variation
+          direction: Math.random() > 0.5 ? 1 : -1,
+          hovered: false,
+          yOffset: bottomOffset
+        };
+
+        // Render HTML component including the sliced character PNGs
+        char.innerHTML = `
+          <!-- Speech bubble structure -->
+          <div class="speech-bubble" id="bubble-${config.id}"></div>
+          
+          <!-- Floating Name tag & status indicator -->
+          <div class="name-tag-wrapper" style="--agent-color: ${config.color}">
+            <span class="status-dot char-status-dot ${config.status}"></span>
+            <span class="name-tag">${config.name}</span>
+          </div>
+
+          <!-- Character graphic component -->
+          <div class="character-visual">
+            <img class="sprite-img" src="char_${config.id}.png" alt="${config.name}" onerror="fallbackToSvg('${config.id}')">
+            <div class="svg-fallback-wrapper" style="display:none; width:100%; height:100%;">
+              ${config.svg}
+            </div>
+          </div>
+        `;
+
+        // Hover handlers
+        char.addEventListener('mouseenter', () => {
+          activeAgents[config.id].hovered = true;
+          char.classList.remove('walking', 'idling');
+          showSpeechBubble(config.id, getRandomTask(config.id));
+        });
+
+        char.addEventListener('mouseleave', () => {
+          activeAgents[config.id].hovered = false;
+          
+          // Restore appropriate class
+          const status = AGENTS_CONFIG[config.id].status;
+          if (status === 'active') char.classList.add('walking');
+          if (status === 'idle') char.classList.add('idling');
+          
+          hideSpeechBubble(config.id);
+        });
+
+        // Click handler to toggle status
+        char.addEventListener('click', () => {
+          cycleAgentStatus(config.id);
+        });
+
+        floor.appendChild(char);
+      });
+    }
+
+    // Trigger SVG fallback if sliced PNG is missing
+    function fallbackToSvg(agentId) {
+      const charEl = document.getElementById(`agent-${agentId}`);
+      if (charEl) {
+        const img = charEl.querySelector('.sprite-img');
+        const svgWrapper = charEl.querySelector('.svg-fallback-wrapper');
+        if (img) img.style.display = 'none';
+        if (svgWrapper) svgWrapper.style.display = 'block';
+      }
+    }
+
+    // Get random task of agent for hover display
+    function getRandomTask(agentId) {
+      const tasks = AGENTS_CONFIG[agentId].tasks;
+      return tasks[Math.floor(Math.random() * tasks.length)];
+    }
+
+    // ==========================================================================
+    // MOVEMENT & PHYSICS GAME LOOP
+    // ==========================================================================
+    
+    function walkEngineUpdate() {
+      const viewWidth = window.innerWidth;
+      
+      // Calculate floor zone limits based on responsive width
+      let leftBound = viewWidth * 0.27;
+      let rightBound = viewWidth * 0.73;
+      
+      if (viewWidth <= 768) {
+        // Mobile view has collapsed panels, so expand walking boundary
+        leftBound = viewWidth * 0.05;
+        rightBound = viewWidth * 0.95;
+      }
+
+      Object.keys(activeAgents).forEach(key => {
+        const agent = activeAgents[key];
+        
+        // Skip updates if hovered or if agent is in error state or idle
+        const status = AGENTS_CONFIG[agent.id].status;
+        const isMovable = status === 'active';
+        
+        if (!agent.hovered && isMovable) {
+          // Calculate movement
+          agent.x += agent.speed * agent.direction;
+          
+          // Collision detection against responsive bounds
+          if (agent.direction === 1 && agent.x > (rightBound - agent.width)) {
+            agent.direction = -1;
+            agent.element.classList.add('flip');
+          } else if (agent.direction === -1 && agent.x < leftBound) {
+            agent.direction = 1;
+            agent.element.classList.remove('flip');
+          }
+
+          // Apply transform positioning
+          agent.element.style.left = `${agent.x}px`;
+        }
+        
+        // Safety bounds check if width changed suddenly
+        if (agent.x < leftBound) {
+          agent.x = leftBound + Math.random() * 20;
+          agent.direction = 1;
+          agent.element.classList.remove('flip');
+        } else if (agent.x > rightBound - agent.width) {
+          agent.x = rightBound - agent.width - Math.random() * 20;
+          agent.direction = -1;
+          agent.element.classList.add('flip');
+        }
+      });
+
+      requestAnimationFrame(walkEngineUpdate);
+    }
+
+    // ==========================================================================
+    // CHAT & MESSAGE SYSTEM
+    // ==========================================================================
+
+    // Display floating speech bubble
+    function showSpeechBubble(agentId, message) {
+      const bubble = document.getElementById(`bubble-${agentId}`);
+      if (!bubble) return;
+
+      // Clear any previous timeout for this agent
+      if (bubbleTimeouts[agentId]) {
+        clearTimeout(bubbleTimeouts[agentId]);
+        bubbleTimeouts[agentId] = null;
+      }
+
+      bubble.innerText = message;
+      bubble.classList.add('visible');
+
+      // Add to active bubbles queue if not already there
+      if (!activeBubbles.includes(agentId)) {
+        activeBubbles.push(agentId);
+      }
+
+      // Limit concurrent bubbles to 2
+      if (activeBubbles.length > maxActiveBubbles) {
+        const oldestId = activeBubbles.shift();
+        hideSpeechBubble(oldestId);
+      }
+
+      // Auto fade out after 3 seconds
+      bubbleTimeouts[agentId] = setTimeout(() => {
+        hideSpeechBubble(agentId);
+      }, 3000);
+    }
+
+    // Hide floating speech bubble
+    function hideSpeechBubble(agentId) {
+      const bubble = document.getElementById(`bubble-${agentId}`);
+      if (bubble) {
+        bubble.classList.remove('visible');
+      }
+      activeBubbles = activeBubbles.filter(id => id !== agentId);
+      
+      if (bubbleTimeouts[agentId]) {
+        clearTimeout(bubbleTimeouts[agentId]);
+        bubbleTimeouts[agentId] = null;
+      }
+    }
+
+    // Format times like HH:MM:SS
+    function getFormattedTime() {
+      const now = new Date();
+      return now.toTimeString().split(' ')[0];
+    }
+
+    // Append message text to terminal log
+    function addTerminalChatLine(senderId, msg, timestamp) {
+      const feed = document.getElementById('terminal-feed');
+      if (!feed) return;
+
+      const chatLine = document.createElement('div');
+      chatLine.className = 'chat-line';
+
+      let senderName = 'SYSTEM';
+      let senderClass = 'sender-system';
+
+      if (senderId === 'user') {
+        senderName = 'OPERATOR';
+        senderClass = 'sender-user';
+      } else if (senderId !== 'system') {
+        senderName = AGENTS_CONFIG[senderId].name;
+        senderClass = `sender-${senderId}`;
+      }
+
+      chatLine.innerHTML = `
+        <span class="chat-time">[${timestamp}]</span>
+        <span class="chat-sender ${senderClass}">${senderName}:</span>
+        <span class="chat-msg">${msg}</span>
+      `;
+
+      feed.appendChild(chatLine);
+      feed.scrollTop = feed.scrollHeight; // Auto-scroll
+      
+      // Limit terminal list to 50 items
+      while (feed.childNodes.length > 50) {
+        feed.removeChild(feed.firstChild);
+      }
+    }
+
+    // Auto Chat Loop
+    let nextChatIndex = 0;
+    let autoChatTimeout = null;
+
+    function scheduleNextAutoChat() {
+      // Every 5-8 seconds randomly
+      const delay = 5000 + Math.random() * 3000;
+      autoChatTimeout = setTimeout(() => {
+        triggerAutoChat();
+        scheduleNextAutoChat();
+      }, delay);
+    }
+    
+    function triggerAutoChat() {
+      const dialog = AGENTS_CHATTER[nextChatIndex];
+      const senderConfig = AGENTS_CONFIG[dialog.sender];
+      
+      // Skip error agents talking
+      if (senderConfig && senderConfig.status !== 'error') {
+        const timeStr = getFormattedTime();
+        
+        // Trigger bubble & terminal log
+        triggerBubble(dialog.sender, dialog.msg);
+        addTerminalChatLine(dialog.sender, dialog.msg, timeStr);
+
+        // Update status activity descriptions
+        const textEl = document.getElementById(`activity-text-${dialog.sender}`);
+        if (textEl) {
+          senderConfig.lastActivity = dialog.msg;
+          textEl.innerText = dialog.msg;
+        }
+
+        // Fluctuates dashboard numbers
+        fluctuateMetrics();
+      }
+
+      // Cycle pointer
+      nextChatIndex = (nextChatIndex + 1) % AGENTS_CHATTER.length;
+    }
+
+    // Force dialogue trigger (For button)
+    function triggerManualChat() {
+      triggerAutoChat();
+    }
+
+    function triggerSpecificChat(index) {
+      const dialog = AGENTS_CHATTER[index];
+      const timeStr = getFormattedTime();
+      
+      triggerBubble(dialog.sender, dialog.msg);
+      addTerminalChatLine(dialog.sender, dialog.msg, timeStr);
+      
+      nextChatIndex = (index + 1) % AGENTS_CHATTER.length;
+    }
+
+    // Helper to queue speech bubble
+    function triggerBubble(agentId, message) {
+      showSpeechBubble(agentId, message);
+    }
+
+    // Interactive Operator console
+    function handleChatSubmit(event) {
+      event.preventDefault();
+      const input = document.getElementById('terminal-input');
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const timeStr = getFormattedTime();
+      
+      // Log operator's message
+      addTerminalChatLine('user', text, timeStr);
+      input.value = '';
+
+      // Simple AI replies from supervisor bot
+      setTimeout(() => {
+        const replyTime = getFormattedTime();
+        let reply = "Processing command request...";
+        
+        const norm = text.toLowerCase();
+        if (norm.includes('status')) {
+          reply = "All subagents online. Supervisor running optimization script.";
+        } else if (norm.includes('active') || norm.includes('move')) {
+          reply = "Activating all standby workers. Commencing scraper telemetry.";
+          Object.keys(AGENTS_CONFIG).forEach(key => {
+            if (AGENTS_CONFIG[key].status !== 'active') {
+              cycleAgentStatus(key); // set active
+            }
+          });
+        } else if (norm.includes('error') || norm.includes('halt')) {
+          reply = "Triggering manual error override test on Post Agent.";
+          if (AGENTS_CONFIG.postAgent.status !== 'error') {
+            cycleAgentStatus('postAgent');
+          }
+        } else if (norm.includes('clear')) {
+          document.getElementById('terminal-feed').innerHTML = '';
+          reply = "Console log buffer cleared. Thread reset.";
+        } else {
+          reply = "CMD Acknowledged. Broadcasting instruction to pipeline queue.";
+        }
+
+        // Trigger bubble & log for Supervisor reply
+        triggerBubble('supervisor', reply);
+        addTerminalChatLine('supervisor', reply, replyTime);
+      }, 800);
+    }
+
+    // Fluctuate stats
+    function fluctuateMetrics() {
+      // Revenue increase
+      const revEl = document.getElementById('metric-revenue');
+      let rev = parseFloat(revEl.innerText.replace('฿', '').replace(',', ''));
+      rev += (Math.random() * 45 + 5);
+      revEl.innerText = '฿' + rev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      // Clicks
+      const clickEl = document.getElementById('metric-clicks');
+      let clicks = parseInt(clickEl.innerText.replace(',', ''));
+      clicks += Math.floor(Math.random() * 12 + 1);
+      clickEl.innerText = clicks.toLocaleString();
+
+      // Posts published
+      if (Math.random() > 0.88) {
+        const postEl = document.getElementById('metric-posts');
+        let posts = parseInt(postEl.innerText);
+        posts += 1;
+        postEl.innerText = posts;
+
+        // Progress queue logic
+        updateQueueTaskDynamically();
+      }
+
+      // Push a new metric point onto the real-time line chart
+      const lastPoint = chartPoints[chartPoints.length - 1];
+      let nextPoint = lastPoint + (Math.random() * 20 - 10);
+      nextPoint = Math.max(15, Math.min(95, nextPoint)); // limit bounds
+      
+      chartPoints.push(nextPoint);
+      if (chartPoints.length > maxChartPoints) {
+        chartPoints.shift();
+      }
+      updateLineChart();
+    }
+
+    // Cycles queue pipeline states
+    function updateQueueTaskDynamically() {
+      const runningTask = INITIAL_QUEUE_TASKS.find(t => t.status === 'running');
+      const pendingTask = INITIAL_QUEUE_TASKS.find(t => t.status === 'pending');
+
+      if (runningTask) {
+        runningTask.status = 'done';
+      }
+      if (pendingTask) {
+        pendingTask.status = 'running';
+        const nextId = INITIAL_QUEUE_TASKS.length + 1;
+        INITIAL_QUEUE_TASKS.push({
+          id: nextId,
+          title: `Analyze Product Batch #${nextId}`,
+          time: getFormattedTime().slice(0, 5),
+          details: 'Scraping metrics for new affiliate target.',
+          status: 'pending'
+        });
+      }
+
+      if (INITIAL_QUEUE_TASKS.length > 5) {
+        INITIAL_QUEUE_TASKS.shift();
+      }
+
+      renderContentQueuePanel();
+    }
+
+    // ==========================================================================
+    // ASSET INSPECTOR MODAL LOGIC
+    // ==========================================================================
+    function openModal() {
+      document.getElementById('assets-modal').classList.add('active');
+    }
+    
+    function closeModal(event) {
+      document.getElementById('assets-modal').classList.remove('active');
+    }
+
+    function switchModalTab(tabId, element) {
+      // Clear active class on all tabs
+      document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+      element.classList.add('active');
+
+      // Hide all content panels
+      document.querySelectorAll('.modal-content-panel').forEach(p => p.classList.remove('active'));
+      
+      // Show target panel
+      document.getElementById(tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
