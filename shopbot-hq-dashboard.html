@@ -68,8 +68,7 @@
     .header-hud {
       position: fixed;
       top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 360px;
       background: rgba(10, 15, 30, 0.7);
       backdrop-filter: blur(12px) saturate(180%);
       -webkit-backdrop-filter: blur(12px) saturate(180%);
@@ -79,6 +78,9 @@
       padding: 8px 24px;
       z-index: 1000;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
     .hud-title {
       font-family: 'Outfit', sans-serif;
@@ -419,8 +421,7 @@
     .health-monitor-overlay {
       position: fixed;
       top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 360px;
       width: 440px;
       background: rgba(8, 12, 28, 0.75);
       backdrop-filter: blur(16px) saturate(180%);
