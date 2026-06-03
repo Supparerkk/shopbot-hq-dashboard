@@ -1129,90 +1129,90 @@
     const AGENTS_CONFIG = {
       supervisor: {
         id: 'supervisor',
-        name: 'Supervisor',
+        name: 'บอตผู้ตรวจการ (Supervisor)',
         color: '#ffcc00', // Yellow
         status: 'active',
         bottomOffset: 0,
         filename: 'agent-1-supervisor.png?v=8',
-        lastActivity: 'Monitoring overall operations',
-        tasks: ["Auditing system pipelines...", "Scheduling post feeds...", "Checking worker stats..."],
-        messages: ["All agents, report status ✓", "Broadcasting pipeline tasks...", "System throughput is optimal."]
+        lastActivity: 'กำลังตรวจสอบภาพรวมการทำงาน',
+        tasks: ["กำลังตรวจสอบระบบไปป์ไลน์...", "กำลังจัดตารางเวลาโพสต์ฟีด...", "กำลังเช็กสถานะการทำงานบอต..."],
+        messages: ["ทุกเอเจนต์ รายงานสถานะด้วยครับ ✓", "กำลังกระจายงานไปป์ไลน์ระบบ...", "ปริมาณการประมวลผลระบบปกติราบรื่นดี"]
       },
       productFinder: {
         id: 'productFinder',
-        name: 'Product Finder',
+        name: 'บอตค้นหาสินค้า (Product Finder)',
         color: '#00ff88', // Green
         status: 'active',
         bottomOffset: 8,
         filename: 'agent-2-finder.png?v=8',
-        lastActivity: 'Scraping Shopee trends',
-        tasks: ["Scanning top tech categories...", "Filtering conversion coefficients...", "Scraping viral keywords..."],
-        messages: ["Found 5 trending products!", "Ergonomic chair items are trending.", "Ergonomic keyboard scraper active."]
+        lastActivity: 'กำลังดึงเทรนด์สินค้า Shopee',
+        tasks: ["กำลังค้นหาหมวดหมู่สินค้าไอทียอดฮิต...", "กำลังวิเคราะห์ค่าสัมประสิทธิ์การขาย...", "กำลังดึงข้อมูลคีย์เวิร์ดสุดไวรัล..."],
+        messages: ["เจอสินค้าเทรนด์ใหม่ 5 รายการแล้ว!", "เก้าอี้สุขภาพกำลังมาแรงมากครับ", "ระบบค้นหาคีย์บอร์ดสุขภาพพร้อมทำงาน"]
       },
       clipSelector: {
         id: 'clipSelector',
-        name: 'Clip Selector',
+        name: 'บอตคัดเลือกคลิป (Clip Selector)',
         color: '#cc66ff', // Purple
         status: 'active',
         bottomOffset: 4,
         filename: 'agent-3-clip.png?v=8',
-        lastActivity: 'Cutting product raw footage',
-        tasks: ["Isolating CTR-hook frames...", "Cropping media ratios...", "Optimizing audio waveforms..."],
-        messages: ["Best clip selected for #3", "Extracted tech hook frames.", "Audio tracks matching completes."]
+        lastActivity: 'กำลังตัดช็อตวิดีโอดิบ',
+        tasks: ["กำลังตัดช็อตเปิดตัวดึงยอด CTR...", "กำลังปรับอัตราส่วนวิดีโอ...", "กำลังปรับแต่งคลื่นเสียงคอนเทนต์..."],
+        messages: ["เลือกช็อตที่ดีที่สุดสำหรับวิดีโอ #3 แล้ว", "ตัดคลิปดึงดูดความสนใจเสร็จสิ้น", "ปรับคลื่นเสียงวิดีโอเรียบร้อยครับ"]
       },
       videoMaker: {
         id: 'videoMaker',
-        name: 'Video Maker',
+        name: 'บอตตัดต่อวิดีโอ (Video Maker)',
         color: '#ff0055', // Pink
         status: 'active',
         bottomOffset: 12,
         filename: 'agent-4-video.png?v=8',
-        lastActivity: 'Blending overlay sequences',
-        tasks: ["Rendering 1080p transitions...", "Stitching overlay scenes...", "Animating text labels..."],
-        messages: ["Rendering video #4...", "Video render completed! ✓", "Overlay graphics aligned."]
+        lastActivity: 'กำลังซ้อนกราฟิก Overlay',
+        tasks: ["กำลังเรนเดอร์ Transition 1080p...", "กำลังจัดลำดับภาพและข้อความ...", "กำลังทำแอนิเมชันข้อความพาดหัว..."],
+        messages: ["กำลังเรนเดอร์คอนเทนต์วิดีโอ #4...", "เรนเดอร์วิดีโอเสร็จสมบูรณ์! ✓", "จัดวางกราฟิก Overlay ลงตัวแล้วครับ"]
       },
       captionWriter: {
         id: 'captionWriter',
-        name: 'Caption Writer',
+        name: 'บอตเขียนแคปชัน (Caption Writer)',
         color: '#00eeff', // Cyan
         status: 'active',
         bottomOffset: 2,
         filename: 'agent-5-caption.png?v=8',
-        lastActivity: 'Drafting viral hooks',
-        tasks: ["Drafting caption copy blocks...", "Formatting SEO keywords...", "Matching trending hashtags..."],
-        messages: ["Caption ready, hooks drafted", "Engagement hook optimization ready.", "Hashtags metrics matched."]
+        lastActivity: 'กำลังเขียนประโยคเปิดคลิป',
+        tasks: ["กำลังร่างแคปชันโดนๆ...", "กำลังคัดเลือกคีย์เวิร์ดทำ SEO...", "กำลังจับคู่แฮชแท็กติดเทรนด์..."],
+        messages: ["ร่างแคปชันและประโยคเปิดเรียบร้อยครับ", "ปรับแต่งประโยคกระตุ้นการมีส่วนร่วมเสร็จแล้ว", "วิเคราะห์และจับคู่แฮชแท็กเสร็จสิ้น"]
       },
       postAgent: {
         id: 'postAgent',
-        name: 'Post Agent',
+        name: 'บอตเผยแพร่โพสต์ (Post Agent)',
         color: '#ff00ea', // Magenta
         status: 'active',
         bottomOffset: 6,
         filename: 'agent-6-post.png?v=8',
-        lastActivity: 'Preparing media scheduling',
-        tasks: ["Uploading assets to endpoint...", "Injecting tags metadata...", "Checking video link paths..."],
-        messages: ["Posted to TikTok ✓", "TikTok publish task complete.", "Post scheduled successfully."]
+        lastActivity: 'กำลังตั้งเวลาโพสต์วิดีโอ',
+        tasks: ["กำลังอัปโหลดไฟล์วิดีโอเข้าสู่เซิร์ฟเวอร์...", "กำลังใส่แท็กและคำอธิบาย...", "กำลังตรวจเช็กความถูกต้องของลิงก์ปลายทาง..."],
+        messages: ["โพสต์ลง TikTok สำเร็จแล้วครับ ✓", "งานอัปโหลดและเผยแพร่คอนเทนต์เรียบร้อย", "จัดตารางเวลาโพสต์คอนเทนต์เรียบร้อยแล้ว"]
       },
       analyticsAgent: {
         id: 'analyticsAgent',
-        name: 'Analytics Agent',
+        name: 'บอตวิเคราะห์ผล (Analytics Agent)',
         color: '#00ffbc', // Emerald
         status: 'active',
         bottomOffset: 10,
         filename: 'agent-7-analytics.png?v=8',
-        lastActivity: 'Recalculating ROI metrics',
-        tasks: ["Polling CTR telemetry...", "Auditing payout commissions...", "Plotting metrics arrays..."],
-        messages: ["CTR up 14% today 📈", "Average payout CTR +8% growth.", "Revenue margins telemetry green."]
+        lastActivity: 'กำลังประมวลผลสถิติ',
+        tasks: ["กำลังคำนวณสถิติยอด CTR...", "กำลังตรวจสอบค่าคอมมิชชัน...", "กำลังพลอตค่าสถิติแดชบอร์ด..."],
+        messages: ["ยอดคลิก CTR วันนี้เพิ่มขึ้น 14% 📈", "ยอดค่าคอมเฉลี่ยเติบโตขึ้น +8%", "ผลการวิเคราะห์ข้อมูลวันนี้เป็นสีเขียวครับ"]
       }
     };
 
     // Queued pipelines items
     const INITIAL_QUEUE_TASKS = [
-      { id: 1, title: 'Extract top tech products', time: '12:20', details: 'Product Finder scan complete.', status: 'done' },
-      { id: 2, title: 'Cut hooks for Video #02', time: '12:22', details: 'Clip Selector rendering crops.', status: 'done' },
-      { id: 3, title: 'Compile dashcam promo', time: '12:24', details: 'Video Maker rendering layout.', status: 'running' },
-      { id: 4, title: 'Write optimized viral hook', time: '12:25', details: 'Caption Writer copy writing.', status: 'pending' },
-      { id: 5, title: 'Schedule to TikTok Feed', time: '12:30', details: 'Post Agent await files upload.', status: 'pending' }
+      { id: 1, title: 'ค้นหาผลิตภัณฑ์ไอทียอดฮิต', time: '12:20', details: 'บอต Product Finder ค้นหาสำเร็จ', status: 'done' },
+      { id: 2, title: 'ตัดช็อตสั้นสำหรับวิดีโอ #02', time: '12:22', details: 'บอต Clip Selector ดำเนินการตัดเฟรมเสร็จสิ้น', status: 'done' },
+      { id: 3, title: 'รวมคลิปโปรโมตกล้องติดรถยนต์', time: '12:24', details: 'บอต Video Maker กำลังเรนเดอร์โครงสร้าง', status: 'running' },
+      { id: 4, title: 'เขียนแคปชันประโยคเปิดโดนๆ', time: '12:25', details: 'บอต Caption Writer กำลังเขียนประโยค', status: 'pending' },
+      { id: 5, title: 'ตั้งตารางเวลาลงฟีด TikTok', time: '12:30', details: 'บอต Post Agent รออัปโหลดไฟล์วิดีโอ', status: 'pending' }
     ];
 
     // Chart performance lines
@@ -1237,7 +1237,7 @@
       // Auto Ticker chats dialogue loop (every 7 seconds)
       setInterval(triggerAutoChat, 7000);
 
-      addTerminalChatLine('system', 'System online. Monitoring link active.', getFormattedTime());
+      addTerminalChatLine('system', 'ระบบออนไลน์อยู่ ลิงก์เชื่อมโยงสถิติพร้อมใช้งาน', getFormattedTime());
     });
 
     // Panel 1: Agent Status
@@ -1486,9 +1486,9 @@
       if (charEl) {
         if (nextStatus === 'idle') {
           charEl.classList.add('idle-state');
-          config.lastActivity = 'Idling standby.';
+          config.lastActivity = 'หยุดทำงานชั่วคราว (สแตนด์บาย)';
         } else {
-          config.lastActivity = 'Resuming walk telemetry.';
+          config.lastActivity = 'เริ่มเคลื่อนไหวและทำงานตามปกติ';
           const state = agentsState[agentId];
           if (state) {
             state.state = 'idle';
@@ -1502,7 +1502,7 @@
 
       // Add log message to Team Chat terminal feed
       const timeStr = getFormattedTime();
-      addTerminalChatLine('system', `Agent ${config.name} state: ${nextStatus.toUpperCase()}`, timeStr);
+      addTerminalChatLine('system', `บอต ${config.name} เปลี่ยนสถานะเป็น: ${nextStatus === 'active' ? 'กำลังทำงาน' : 'หยุดทำงาน'}`, timeStr);
     }
 
     // Get random task of agent for hover display
@@ -1650,30 +1650,30 @@
       // Mock interactive replies from Supervisor bot
       setTimeout(() => {
         const replyTime = getFormattedTime();
-        let reply = "Processing command...";
+        let reply = "กำลังประมวลผลคำสั่ง...";
         const norm = text.toLowerCase();
         
-        if (norm.includes('status')) {
-          reply = "All subagents functional. Overall pipeline throughput 100%.";
-        } else if (norm.includes('active') || norm.includes('run')) {
-          reply = "Activating all standby bots.";
+        if (norm.includes('status') || norm.includes('สถานะ')) {
+          reply = "ระบบบอตย่อยทุกตัวทำงานปกติ ประสิทธิภาพไปป์ไลน์โดยรวม 100%";
+        } else if (norm.includes('active') || norm.includes('run') || norm.includes('เริ่ม') || norm.includes('เปิด')) {
+          reply = "กำลังเปิดใช้งานบอตทั้งหมดที่อยู่ในโหมดสแตนด์บาย...";
           Object.keys(AGENTS_CONFIG).forEach(key => {
             if (AGENTS_CONFIG[key].status !== 'active') {
               toggleAgentState(key);
             }
           });
-        } else if (norm.includes('idle') || norm.includes('stop')) {
-          reply = "Setting active bots to standby mode.";
+        } else if (norm.includes('idle') || norm.includes('stop') || norm.includes('หยุด') || norm.includes('ปิด')) {
+          reply = "กำลังตั้งค่าบอตทั้งหมดให้เข้าสู่โหมดสแตนด์บาย...";
           Object.keys(AGENTS_CONFIG).forEach(key => {
             if (AGENTS_CONFIG[key].status === 'active') {
               toggleAgentState(key);
             }
           });
-        } else if (norm.includes('clear')) {
+        } else if (norm.includes('clear') || norm.includes('ล้าง')) {
           document.getElementById('terminal-feed').innerHTML = '';
-          reply = "Log feed cleared.";
+          reply = "ล้างข้อมูลประวัติบอตเรียบร้อย";
         } else {
-          reply = "Command received. Syncing pipeline cache.";
+          reply = "ได้รับคำสั่งแล้ว กำลังซิงก์ข้อมูลไปป์ไลน์...";
         }
         
         showSpeechBubble('supervisor', reply);
@@ -1779,9 +1779,9 @@
         const nextId = INITIAL_QUEUE_TASKS.length + 1;
         INITIAL_QUEUE_TASKS.push({
           id: nextId,
-          title: `Analyze Product Batch #${nextId}`,
+          title: `วิเคราะห์ข้อมูลสินค้าชุดที่ #${nextId}`,
           time: getFormattedTime().slice(0, 5),
-          details: 'Scraping metrics for new affiliate target.',
+          details: 'กำลังดึงข้อมูลสำหรับแคมเปญนายหน้าครั้งใหม่',
           status: 'pending'
         });
       }
