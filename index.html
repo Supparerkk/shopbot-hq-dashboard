@@ -3,40 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShopBot HQ - AI Agent Monitor</title>
+  <title>ShopBot HQ Monitor</title>
   
-  <!-- Retro Game Fonts from Google Fonts -->
+  <!-- Fonts from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
-       1. DESIGN SYSTEM & CORE STYLES
+       1. CORE SYSTEM LAYOUT
        ========================================================================== */
-    :root {
-      --bg-navy-dark: #03030f;
-      --bg-panel: rgba(5, 5, 20, 0.88);
-      --bg-panel-header: rgba(10, 10, 32, 0.94);
-      --neon-cyan: #00f0ff;
-      --neon-green: #39ff14;
-      --neon-pink: #ff0055;
-      --neon-yellow: #ffb700;
-      --neon-purple: #bd00ff;
-      --text-primary: #e2e8f0;
-      --text-secondary: #8295b0;
-      --text-dark: #050510;
-      
-      --font-header: 'Press Start 2P', cursive, monospace;
-      --font-body: 'Share Tech Mono', monospace;
-
-      --glow-cyan: 0 0 12px var(--neon-cyan);
-      --glow-pink: 0 0 12px var(--neon-pink);
-      --glow-green: 0 0 12px var(--neon-green);
-      --glow-yellow: 0 0 12px var(--neon-yellow);
-      --glow-purple: 0 0 12px var(--neon-purple);
-    }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -45,7 +22,7 @@
     }
 
     body {
-      background-color: var(--bg-navy-dark);
+      background-color: #03030f;
       background-image: url('./background.jpg');
       background-size: cover;
       background-position: center;
@@ -54,11 +31,11 @@
       height: 100vh;
       width: 100vw;
       position: relative;
-      font-family: var(--font-body);
-      color: var(--text-primary);
+      font-family: 'Share Tech Mono', monospace;
+      color: #c8f0c8;
     }
 
-    /* Pulse CRT effect */
+    /* Screen vignette scanlines overlay */
     body::before {
       content: "";
       position: absolute;
@@ -71,8 +48,6 @@
       z-index: 999;
       pointer-events: none;
     }
-
-    /* CRT scanlines & vignette overlay */
     body::after {
       content: "";
       position: absolute;
@@ -80,7 +55,7 @@
       background: radial-gradient(
         circle,
         rgba(0, 0, 0, 0) 40%,
-        rgba(0, 0, 0, 0.55) 100%
+        rgba(0, 0, 0, 0.5) 100%
       );
       z-index: 998;
       pointer-events: none;
@@ -95,126 +70,91 @@
       background: rgba(5, 5, 20, 0.5);
     }
     ::-webkit-scrollbar-thumb {
-      background: var(--neon-cyan);
+      background: #00eeff;
       border-radius: 3px;
-      box-shadow: 0 0 4px var(--neon-cyan);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--neon-purple);
-      box-shadow: 0 0 4px var(--neon-purple);
+      box-shadow: 0 0 4px #00eeff;
     }
 
     /* ==========================================================================
-       2. RETRO GAME UI WINDOWS (PANELS)
+       2. RETRO DASHBOARD PANELS
        ========================================================================== */
     .dashboard-panel {
-      position: absolute;
-      width: 28%;
-      max-width: 380px;
-      min-width: 310px;
-      background: var(--bg-panel);
+      background: rgba(4, 6, 20, 0.90);
       border-radius: 6px;
+      padding: 16px;
+      position: fixed;
+      width: 280px;
+      font-family: 'Share Tech Mono', monospace;
       z-index: 100;
+      color: #c8f0c8;
+      font-size: 12px;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
     }
 
-    /* Placements matching corners */
+    /* Placements */
     .panel-top-left {
       top: 16px;
       left: 16px;
-      height: calc(50vh - 26px);
-      border: 1.5px solid var(--neon-green);
-      box-shadow: var(--glow-green);
+      height: calc(50vh - 24px);
+      border: 1.5px solid #00ff88;
+      box-shadow: 0 0 10px #00ff88;
     }
 
     .panel-top-right {
       top: 16px;
       right: 16px;
-      height: calc(50vh - 26px);
-      border: 1.5px solid var(--neon-cyan);
-      box-shadow: var(--glow-cyan);
+      height: calc(50vh - 24px);
+      border: 1.5px solid #00eeff;
+      box-shadow: 0 0 10px #00eeff;
     }
 
     .panel-bottom-left {
       bottom: 16px;
       left: 16px;
-      height: calc(50vh - 26px);
-      border: 1.5px solid var(--neon-yellow);
-      box-shadow: var(--glow-yellow);
+      height: calc(50vh - 24px);
+      border: 1.5px solid #ffcc00;
+      box-shadow: 0 0 10px #ffcc00;
     }
 
     .panel-bottom-right {
       bottom: 16px;
       right: 16px;
-      height: calc(50vh - 26px);
-      border: 1.5px solid var(--neon-purple);
-      box-shadow: var(--glow-purple);
+      height: 300px;
+      border: 1.5px solid #cc66ff;
+      box-shadow: 0 0 10px #cc66ff;
     }
 
-    /* Panel Header Style */
-    .panel-header {
-      background: var(--bg-panel-header);
-      padding: 10px 14px;
-      border-bottom: 1.5px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-    }
-
-    .panel-top-left .panel-header { --border-color: var(--neon-green); }
-    .panel-top-right .panel-header { --border-color: var(--neon-cyan); }
-    .panel-bottom-left .panel-header { --border-color: var(--neon-yellow); }
-    .panel-bottom-right .panel-header { --border-color: var(--neon-purple); }
-
+    /* Titles styling */
     .panel-title {
-      font-family: var(--font-header);
-      font-size: 11px;
-      color: #fff;
-      letter-spacing: 0.8px;
+      font-family: 'Press Start 2P', cursive, monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      text-shadow: 0 0 4px var(--border-color);
-    }
-
-    .panel-controls {
-      display: flex;
       gap: 6px;
     }
 
-    .control-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.25);
-    }
-    .panel-top-left .control-dot { background: var(--neon-green); }
-    .panel-top-right .control-dot { background: var(--neon-cyan); }
-    .panel-bottom-left .control-dot { background: var(--neon-yellow); }
-    .panel-bottom-right .control-dot { background: var(--neon-purple); }
+    .panel-top-left .panel-title { color: #00ff88; text-shadow: 0 0 4px #00ff88; }
+    .panel-top-right .panel-title { color: #00eeff; text-shadow: 0 0 4px #00eeff; }
+    .panel-bottom-left .panel-title { color: #ffcc00; text-shadow: 0 0 4px #ffcc00; }
+    .panel-bottom-right .panel-title { color: #cc66ff; text-shadow: 0 0 4px #cc66ff; }
 
     .panel-body {
-      padding: 12px;
       overflow-y: auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
-    /* ==========================================================================
-       3. PANEL COMPONENTS & INNER CONTENT
-       ========================================================================== */
-    
-    /* Panel 1: Agent Status list */
+    /* Panel elements */
     .agent-status-item {
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(57, 255, 20, 0.1);
-      padding: 8px 10px;
+      border: 1px solid rgba(0, 255, 136, 0.1);
+      padding: 6px 8px;
       border-radius: 4px;
       display: flex;
       align-items: center;
@@ -223,23 +163,22 @@
       transition: all 0.2s;
     }
     .agent-status-item:hover {
-      background: rgba(57, 255, 20, 0.04);
-      border-color: var(--neon-green);
-      box-shadow: 0 0 6px rgba(57, 255, 20, 0.2);
+      background: rgba(0, 255, 136, 0.05);
+      border-color: #00ff88;
     }
     .agent-info-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       overflow: hidden;
       flex-grow: 1;
     }
     .agent-avatar-indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 1px;
       background-color: var(--agent-color);
-      box-shadow: 0 0 5px var(--agent-color);
+      box-shadow: 0 0 4px var(--agent-color);
       flex-shrink: 0;
     }
     .agent-meta-details {
@@ -248,128 +187,125 @@
       overflow: hidden;
     }
     .agent-mini-name {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: bold;
       color: #fff;
     }
     .agent-mini-activity {
-      font-size: 12px;
-      color: var(--text-secondary);
+      font-size: 11px;
+      color: #82a882;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-top: 1px;
     }
     .agent-status-toggle {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       background: rgba(0,0,0,0.4);
-      padding: 3px 6px;
-      border-radius: 4px;
+      padding: 2px 4px;
+      border-radius: 3px;
       border: 1px solid rgba(255,255,255,0.08);
       flex-shrink: 0;
     }
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       display: inline-block;
     }
-    .status-dot.active { background-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+    .status-dot.active { background-color: #00ff88; box-shadow: 0 0 4px #00ff88; }
     .status-dot.idle { background-color: #718096; box-shadow: none; }
     
     .status-text {
-      font-size: 12px;
+      font-size: 10px;
       text-transform: uppercase;
       font-weight: bold;
+      color: #fff;
     }
 
-    /* Panel 2: Affiliate Metrics */
+    /* Metric Grid */
     .metric-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
     .metric-row {
       display: flex;
       flex-direction: column;
       justify-content: center;
       background: rgba(0, 0, 0, 0.35);
-      padding: 8px 10px;
+      padding: 6px 8px;
       border-radius: 4px;
-      border-left: 3px solid var(--theme-color);
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+      border-left: 2px solid var(--theme-color);
     }
-    .metric-row.rev { --theme-color: var(--neon-green); }
-    .metric-row.post { --theme-color: var(--neon-cyan); }
-    .metric-row.click { --theme-color: var(--neon-pink); }
-    .metric-row.prod { --theme-color: var(--neon-yellow); grid-column: span 2; }
+    .metric-row.rev { --theme-color: #00ff88; }
+    .metric-row.post { --theme-color: #00eeff; }
+    .metric-row.click { --theme-color: #cc66ff; }
+    .metric-row.prod { --theme-color: #ffcc00; grid-column: span 2; }
 
     .metric-label {
-      font-size: 11px;
-      color: var(--text-secondary);
+      font-size: 10px;
+      color: #82a882;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
     .metric-val {
       font-size: 13px;
       color: #fff;
-      margin-top: 3px;
+      margin-top: 2px;
       font-weight: bold;
     }
-    .metric-val.revenue { color: var(--neon-green); text-shadow: 0 0 4px rgba(57, 255, 20, 0.3); }
+    .metric-val.revenue { color: #00ff88; }
     
-    /* SVG Chart */
+    /* SVG line chart */
     .chart-container {
       margin-top: 2px;
       background: rgba(0, 0, 0, 0.4);
       border-radius: 4px;
-      border: 1px solid rgba(0, 240, 255, 0.15);
-      padding: 6px;
+      border: 1px solid rgba(0, 238, 255, 0.15);
+      padding: 4px;
     }
     .chart-title {
-      font-size: 11px;
-      color: var(--neon-cyan);
+      font-size: 10px;
+      color: #00eeff;
       text-transform: uppercase;
-      margin-bottom: 4px;
-      letter-spacing: 0.5px;
+      margin-bottom: 2px;
       font-weight: bold;
     }
     .chart-svg {
       width: 100%;
-      height: 70px;
+      height: 50px;
       overflow: visible;
     }
     .chart-line {
       fill: none;
-      stroke: var(--neon-cyan);
-      stroke-width: 2;
-      filter: drop-shadow(0 0 3px rgba(0, 240, 255, 0.5));
+      stroke: #00eeff;
+      stroke-width: 1.5;
+      filter: drop-shadow(0 0 2px rgba(0, 238, 255, 0.5));
     }
     .chart-area {
       fill: url(#chart-gradient);
       opacity: 0.15;
     }
 
-    /* Panel 3: Content Queue */
+    /* Content Queue */
     .queue-task {
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 8px 10px;
+      padding: 6px;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
     .queue-task-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
     .queue-task-title {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: bold;
       color: #fff;
       white-space: nowrap;
@@ -377,67 +313,58 @@
       text-overflow: ellipsis;
     }
     .queue-task-time {
-      font-size: 11px;
-      color: var(--text-secondary);
+      font-size: 10px;
+      color: #82a882;
     }
     .queue-task-details {
-      font-size: 12px;
-      color: var(--text-secondary);
+      font-size: 10px;
+      color: #82a882;
     }
     .badge {
-      font-family: var(--font-header);
-      font-size: 8px;
-      padding: 2px 5px;
-      border-radius: 3px;
+      font-family: 'Press Start 2P', cursive, monospace;
+      font-size: 7px;
+      padding: 1px 4px;
+      border-radius: 2px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       border: 1px solid;
     }
     .badge.pending {
-      color: var(--neon-yellow);
-      background: rgba(255, 183, 0, 0.08);
-      border-color: rgba(255, 183, 0, 0.25);
+      color: #ffcc00;
+      background: rgba(255, 204, 0, 0.08);
+      border-color: rgba(255, 204, 0, 0.25);
     }
     .badge.running {
-      color: var(--neon-cyan);
-      background: rgba(0, 240, 255, 0.08);
-      border-color: rgba(0, 240, 255, 0.25);
-      animation: pulse-border 1.5s infinite alternate;
+      color: #00eeff;
+      background: rgba(0, 238, 255, 0.08);
+      border-color: rgba(0, 238, 255, 0.25);
     }
     .badge.done {
-      color: var(--neon-green);
-      background: rgba(57, 255, 20, 0.08);
-      border-color: rgba(57, 255, 20, 0.25);
+      color: #00ff88;
+      background: rgba(0, 255, 136, 0.08);
+      border-color: rgba(0, 255, 136, 0.25);
     }
 
-    @keyframes pulse-border {
-      from { border-color: rgba(0, 240, 255, 0.25); }
-      to { border-color: rgba(0, 240, 255, 0.7); }
-    }
-
-    /* Panel 4: Team Chat Terminal */
+    /* Terminal logs */
     .chat-terminal {
       background: rgba(4, 4, 14, 0.95);
-      border: 1px solid rgba(189, 0, 255, 0.2);
+      border: 1px solid rgba(204, 102, 255, 0.2);
       border-radius: 4px;
       flex-grow: 1;
-      padding: 8px;
-      font-family: var(--font-body);
-      font-size: 12px;
-      line-height: 1.35;
+      padding: 6px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      line-height: 1.3;
       overflow-y: auto;
-      height: 160px;
-      max-height: 160px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
-      margin-bottom: 4px;
+      gap: 4px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+      margin-bottom: 6px;
     }
     .chat-line {
-      animation: slide-in-chat 0.25s ease-out forwards;
+      animation: slide-in-chat 0.2s ease-out forwards;
       border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-      padding-bottom: 3px;
+      padding-bottom: 2px;
       word-break: break-word;
     }
     @keyframes slide-in-chat {
@@ -445,42 +372,42 @@
       to { transform: translateY(0); opacity: 1; }
     }
     .chat-time {
-      color: var(--text-secondary);
-      font-size: 10px;
+      color: #82a882;
+      font-size: 9px;
       margin-right: 3px;
     }
     .chat-sender {
       font-weight: bold;
-      margin-right: 5px;
+      margin-right: 4px;
     }
     .chat-msg {
-      color: var(--text-primary);
+      color: #c8f0c8;
     }
 
-    /* Colors by Agent */
     .sender-system { color: #8a8ab0; }
-    .sender-user { color: #fff; text-shadow: 0 0 4px var(--neon-cyan); }
-    .sender-supervisor { color: var(--neon-yellow); }
-    .sender-productFinder { color: var(--neon-green); }
-    .sender-clipSelector { color: var(--neon-purple); }
-    .sender-videoMaker { color: var(--neon-pink); }
-    .sender-captionWriter { color: var(--neon-cyan); }
+    .sender-user { color: #fff; text-shadow: 0 0 3px #00eeff; }
+    .sender-supervisor { color: #ffcc00; }
+    .sender-productFinder { color: #00ff88; }
+    .sender-clipSelector { color: #cc66ff; }
+    .sender-videoMaker { color: #ff0055; }
+    .sender-captionWriter { color: #00eeff; }
     .sender-postAgent { color: #ff00ea; }
     .sender-analyticsAgent { color: #00ffbc; }
 
-    /* Interactive Chat input */
+    /* Interactive input */
     .chat-input-container {
       display: flex;
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(189, 0, 255, 0.2);
+      border: 1px solid rgba(204, 102, 255, 0.2);
       border-radius: 4px;
       overflow: hidden;
+      flex-shrink: 0;
     }
     .chat-prompt {
-      color: var(--neon-purple);
-      padding: 6px 4px 6px 10px;
+      color: #cc66ff;
+      padding: 4px 2px 4px 8px;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 11px;
     }
     .chat-input {
       flex-grow: 1;
@@ -488,47 +415,44 @@
       border: none;
       outline: none;
       color: #fff;
-      font-family: var(--font-body);
-      font-size: 12px;
-      padding: 6px 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      padding: 4px 6px;
     }
     .chat-send-btn {
-      background: rgba(189, 0, 255, 0.15);
+      background: rgba(204, 102, 255, 0.15);
       border: none;
-      border-left: 1px solid rgba(189, 0, 255, 0.2);
-      color: var(--neon-purple);
+      border-left: 1px solid rgba(204, 102, 255, 0.2);
+      color: #cc66ff;
       cursor: pointer;
-      font-family: var(--font-body);
-      font-size: 12px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
       font-weight: bold;
-      padding: 0 12px;
-      transition: all 0.2s;
+      padding: 0 10px;
     }
     .chat-send-btn:hover {
-      background: rgba(189, 0, 255, 0.3);
+      background: rgba(204, 102, 255, 0.3);
       color: #fff;
     }
 
     /* ==========================================================================
-       4. CENTER CHARACTERS WALKING ZONE
+       3. CENTER CHARACTERS WALKING ZONE
        ========================================================================== */
-    
-    /* Horizontal Walk floor zone wrapper */
     #floor-zone {
       position: absolute;
-      top: 55%;
-      height: 30%;
+      top: 58%;
+      height: 24%;
       left: 0;
       width: 100%;
-      z-index: 50; /* Sits behind panels (100) but above background */
+      z-index: 50;
       overflow: visible;
-      pointer-events: none; /* Let clicks pass through to background */
+      pointer-events: none;
     }
 
     #walking-track {
       position: absolute;
-      left: 28vw;
-      width: 44vw;
+      left: 296px;
+      width: calc(100vw - 592px);
       height: 100%;
       overflow: visible;
     }
@@ -536,45 +460,44 @@
     .agent-character {
       position: absolute;
       bottom: 0;
-      width: 146px;
-      height: 248px;
+      width: 60px;
+      height: 100px;
       cursor: pointer;
-      pointer-events: auto; /* Enable hover/clicks on character */
+      pointer-events: auto;
       transform-origin: bottom center;
-      transition: opacity 0.3s;
     }
 
-    /* Floating Labels & status indicators */
+    /* Floating labels */
     .name-tag-wrapper {
       position: absolute;
-      top: -30px;
+      top: -24px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       background: rgba(5, 5, 20, 0.9);
-      border: 1px solid var(--agent-color, var(--neon-cyan));
-      padding: 2px 8px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      border: 1px solid var(--agent-color);
+      padding: 1px 6px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
       white-space: nowrap;
       pointer-events: none;
       z-index: 200;
     }
     .name-tag {
-      font-size: 11px;
+      font-size: 10px;
       color: #fff;
       font-weight: bold;
-      font-family: var(--font-body);
+      font-family: 'Share Tech Mono', monospace;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    /* Graphic wrapper */
+    /* Sprite Wrapper */
     .character-visual-box {
-      width: 146px;
-      height: 248px;
+      width: 60px;
+      height: 100px;
       display: flex;
       justify-content: center;
       align-items: flex-end;
@@ -582,50 +505,42 @@
     }
 
     .sprite-img {
-      width: 146px;
-      height: 248px;
+      height: 100px;
+      width: auto;
       object-fit: contain;
       image-rendering: pixelated;
       transform-origin: bottom center;
       display: block;
     }
 
-    /* Hierarchical Walk Cycle Animations:
-       1. Outer (.agent-character) handles translation path (translateX)
-       2. Middle (.character-visual-box) handles waddling/breathing bounce
-       3. Inner (.sprite-img) handles direction horizontal scale reversals (scaleX)
-    */
-
-    /* Active walking state animations links */
-    .walk-supervisor { animation: walk-pos-anim 8s linear infinite; animation-delay: 0s; }
-    .walk-productFinder { animation: walk-pos-anim 9.5s linear infinite; animation-delay: 1.5s; }
-    .walk-clipSelector { animation: walk-pos-anim 11s linear infinite; animation-delay: 3s; }
-    .walk-videoMaker { animation: walk-pos-anim 7s linear infinite; animation-delay: 2.5s; }
+    /* CSS TranslateX walking cycles (position outer container, flip inner img) */
+    .walk-supervisor { animation: walk-pos-anim 9s linear infinite; animation-delay: 0s; }
+    .walk-productFinder { animation: walk-pos-anim 11s linear infinite; animation-delay: 1.5s; }
+    .walk-clipSelector { animation: walk-pos-anim 8s linear infinite; animation-delay: 3s; }
+    .walk-videoMaker { animation: walk-pos-anim 13s linear infinite; animation-delay: 2s; }
     .walk-captionWriter { animation: walk-pos-anim 10s linear infinite; animation-delay: 4s; }
-    .walk-postAgent { animation: walk-pos-anim 8.5s linear infinite; animation-delay: 1s; }
-    .walk-analyticsAgent { animation: walk-pos-anim 12s linear infinite; animation-delay: 2s; }
+    .walk-postAgent { animation: walk-pos-anim 7s linear infinite; animation-delay: 1s; }
+    .walk-analyticsAgent { animation: walk-pos-anim 12s linear infinite; animation-delay: 2.5s; }
 
-    .walk-supervisor .sprite-img { animation: walk-flip-anim 8s linear infinite; animation-delay: 0s; }
-    .walk-productFinder .sprite-img { animation: walk-flip-anim 9.5s linear infinite; animation-delay: 1.5s; }
-    .walk-clipSelector .sprite-img { animation: walk-flip-anim 11s linear infinite; animation-delay: 3s; }
-    .walk-videoMaker .sprite-img { animation: walk-flip-anim 7s linear infinite; animation-delay: 2.5s; }
+    .walk-supervisor .sprite-img { animation: walk-flip-anim 9s linear infinite; animation-delay: 0s; }
+    .walk-productFinder .sprite-img { animation: walk-flip-anim 11s linear infinite; animation-delay: 1.5s; }
+    .walk-clipSelector .sprite-img { animation: walk-flip-anim 8s linear infinite; animation-delay: 3s; }
+    .walk-videoMaker .sprite-img { animation: walk-flip-anim 13s linear infinite; animation-delay: 2s; }
     .walk-captionWriter .sprite-img { animation: walk-flip-anim 10s linear infinite; animation-delay: 4s; }
-    .walk-postAgent .sprite-img { animation: walk-flip-anim 8.5s linear infinite; animation-delay: 1s; }
-    .walk-analyticsAgent .sprite-img { animation: walk-flip-anim 12s linear infinite; animation-delay: 2s; }
+    .walk-postAgent .sprite-img { animation: walk-flip-anim 7s linear infinite; animation-delay: 1s; }
+    .walk-analyticsAgent .sprite-img { animation: walk-flip-anim 12s linear infinite; animation-delay: 2.5s; }
 
-    /* Active waddle bounce on the visual box */
+    /* Waddle & Breath */
     .agent-character:not(.idle-state) .character-visual-box {
-      animation: waddle-action 0.6s infinite alternate ease-in-out;
+      animation: waddle-action 0.5s infinite alternate ease-in-out;
     }
-    /* Breathing bounce on idle box */
     .agent-character.idle-state .character-visual-box {
       animation: breathe-action 1.5s infinite alternate ease-in-out;
     }
 
-    /* Keyframes */
     @keyframes walk-pos-anim {
       0% { transform: translateX(0); }
-      50% { transform: translateX(calc(44vw - 146px)); }
+      50% { transform: translateX(calc(100vw - 592px - 60px)); }
       100% { transform: translateX(0); }
     }
     
@@ -636,15 +551,15 @@
     }
 
     @keyframes waddle-action {
-      0% { transform: translateY(0) rotate(-3deg); }
-      100% { transform: translateY(-8px) rotate(3deg); }
+      0% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(-5px) rotate(2deg); }
     }
     @keyframes breathe-action {
       0% { transform: translateY(0) scaleY(1); }
-      100% { transform: translateY(-3px) scaleY(0.96); }
+      100% { transform: translateY(-2px) scaleY(0.97); }
     }
 
-    /* Pause walk mechanics on Hover */
+    /* Pause walking hover states */
     .agent-character:hover {
       animation-play-state: paused !important;
     }
@@ -653,10 +568,10 @@
       animation-play-state: paused !important;
     }
     .agent-character:hover .sprite-img {
-      filter: drop-shadow(0 0 8px var(--agent-color));
+      filter: drop-shadow(0 0 6px var(--agent-color));
     }
 
-    /* Pause walking override for idle agents */
+    /* Idle override pauses */
     .agent-character.idle-state {
       animation-play-state: paused !important;
     }
@@ -667,35 +582,35 @@
     /* Speech bubbles */
     .speech-bubble {
       position: absolute;
-      bottom: 255px; /* height of character is 248px, sit above head */
+      bottom: 110px; /* sit above character height of 100px */
       left: 50%;
       transform: translateX(-50%) scale(0.8);
       transform-origin: bottom center;
       background: #fff;
-      color: var(--text-dark);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      line-height: 1.3;
-      width: 180px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      color: #050510;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.25;
+      width: 170px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
       z-index: 500;
       opacity: 0;
-      transition: opacity 0.25s, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 2px solid var(--text-dark);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      border: 1.5px solid #050510;
       pointer-events: none;
       text-align: center;
-      font-family: var(--font-body);
+      font-family: 'Share Tech Mono', monospace;
       font-weight: bold;
     }
 
     .speech-bubble::after {
       content: "";
       position: absolute;
-      bottom: -10px;
+      bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
-      border-width: 10px 10px 0;
+      border-width: 8px 8px 0;
       border-style: solid;
       border-color: #fff transparent;
       display: block;
@@ -705,12 +620,12 @@
     .speech-bubble::before {
       content: "";
       position: absolute;
-      bottom: -13px;
+      bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
-      border-width: 11px 11px 0;
+      border-width: 9px 9px 0;
       border-style: solid;
-      border-color: var(--text-dark) transparent;
+      border-color: #050510 transparent;
       display: block;
       width: 0;
       z-index: -1;
@@ -720,117 +635,39 @@
       opacity: 1;
       transform: translateX(-50%) scale(1);
     }
-
-    /* HUD Top Header Title bar */
-    .header-hud {
-      position: absolute;
-      top: 0; left: 0; width: 100%;
-      height: 54px;
-      background: linear-gradient(to bottom, rgba(3, 3, 15, 0.95) 0%, rgba(3, 3, 15, 0) 100%);
-      z-index: 90;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-      pointer-events: none;
-    }
-
-    .hud-title {
-      font-family: var(--font-header);
-      font-size: 15px;
-      letter-spacing: 1.5px;
-      color: #fff;
-      text-shadow: 0 0 8px var(--neon-cyan);
-      pointer-events: auto;
-    }
-
-    /* Responsive Overrides (Mobile) */
-    @media (max-width: 768px) {
-      .dashboard-panel {
-        position: static !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        margin-bottom: 16px;
-      }
-      body {
-        overflow-y: auto !important;
-        height: auto !important;
-      }
-      #floor-zone {
-        position: relative !important;
-        top: 0 !important;
-        height: 300px !important;
-        margin: 20px 0;
-      }
-      #walking-track {
-        left: 5vw !important;
-        width: 90vw !important;
-      }
-      .walk-supervisor { animation-name: walk-pos-anim-mob; }
-      .walk-productFinder { animation-name: walk-pos-anim-mob; }
-      .walk-clipSelector { animation-name: walk-pos-anim-mob; }
-      .walk-videoMaker { animation-name: walk-pos-anim-mob; }
-      .walk-captionWriter { animation-name: walk-pos-anim-mob; }
-      .walk-postAgent { animation-name: walk-pos-anim-mob; }
-      .walk-analyticsAgent { animation-name: walk-pos-anim-mob; }
-
-      .walk-supervisor .sprite-img { animation-name: walk-flip-anim-mob; }
-      .walk-productFinder .sprite-img { animation-name: walk-flip-anim-mob; }
-      .walk-clipSelector .sprite-img { animation-name: walk-flip-anim-mob; }
-      .walk-videoMaker .sprite-img { animation-name: walk-flip-anim-mob; }
-      .walk-captionWriter .sprite-img { animation-name: walk-flip-anim-mob; }
-      .walk-postAgent .sprite-img { animation-name: walk-flip-anim-mob; }
-      .walk-analyticsAgent .sprite-img { animation-name: walk-flip-anim-mob; }
-
-      @keyframes walk-pos-anim-mob {
-        0% { transform: translateX(0); }
-        50% { transform: translateX(calc(90vw - 146px)); }
-        100% { transform: translateX(0); }
-      }
-      @keyframes walk-flip-anim-mob {
-        0%, 49.9% { transform: scaleX(1); }
-        50%, 99.9% { transform: scaleX(-1); }
-        100% { transform: scaleX(1); }
-      }
+    
+    .speech-bubble.fade-out {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.8);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Retro HUD Header Title -->
+  <!-- Retro HUD Top Title Bar -->
   <header class="header-hud">
-    <div class="hud-title">&gt; SHOPBOT HQ // CORE MONITOR &lt;</div>
+    <div class="hud-title">&gt; SHOPBOT HQ // MONITOR SYSTEM &lt;</div>
   </header>
 
   <!-- ==========================================================================
-       DASHBOARD PANELS (FLOATING EDGES)
+       4 PANELS CORNERS CONSTRAINED
        ========================================================================== -->
 
-  <!-- Panel 1: Agent Status (Top Left) -->
+  <!-- Top Left Panel: Agents Status -->
   <div class="dashboard-panel panel-top-left" id="panel-agent-status">
-    <div class="panel-header">
-      <div class="panel-title">
-        <span class="status-dot active"></span> SYSTEM_AGENTS.LOG
-      </div>
-      <div class="panel-controls">
-        <div class="control-dot"></div>
-      </div>
+    <div class="panel-title">
+      <span class="status-dot active"></span> SYSTEM_AGENTS.LOG
     </div>
     <div class="panel-body" id="agent-status-list">
-      <!-- Generated Dynamically by JS -->
+      <!-- Populated dynamically -->
     </div>
   </div>
 
-  <!-- Panel 2: Affiliate Today (Top Right) -->
+  <!-- Top Right Panel: Affiliate metrics counter -->
   <div class="dashboard-panel panel-top-right" id="panel-affiliate-today">
-    <div class="panel-header">
-      <div class="panel-title">
-        ⚡ AFFILIATE_STATS.HUD
-      </div>
-      <div class="panel-controls">
-        <div class="control-dot"></div>
-      </div>
+    <div class="panel-title">
+      ⚡ AFFILIATE_STATS.HUD
     </div>
     <div class="panel-body">
       <div class="metric-grid">
@@ -848,23 +685,23 @@
         </div>
         <div class="metric-row prod">
           <span class="metric-label">Top Affiliate Product</span>
-          <span class="metric-val" id="metric-top-product" style="color: var(--neon-yellow);">Wireless Earbuds X3</span>
+          <span class="metric-val" id="metric-top-product" style="color: #ffcc00; font-size:12px;">Wireless Earbuds X3</span>
         </div>
       </div>
 
-      <!-- Real-time SVG line chart -->
+      <!-- Neon Cyan SVG Line chart metrics CTR -->
       <div class="chart-container">
         <div class="chart-title">Real-Time Performance CTR</div>
-        <svg class="chart-svg" viewBox="0 0 300 70" preserveAspectRatio="none">
+        <svg class="chart-svg" viewBox="0 0 300 50" preserveAspectRatio="none">
           <defs>
             <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.4" />
-              <stop offset="100%" stop-color="#00f0ff" stop-opacity="0" />
+              <stop offset="0%" stop-color="#00eeff" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="#00eeff" stop-opacity="0" />
             </linearGradient>
           </defs>
-          <line x1="0" y1="15" x2="300" y2="15" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-          <line x1="0" y1="35" x2="300" y2="35" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-          <line x1="0" y1="55" x2="300" y2="55" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="12" x2="300" y2="12" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="25" x2="300" y2="25" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="38" x2="300" y2="38" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
           <path class="chart-area" d="" id="chart-area-path" />
           <path class="chart-line" d="" id="chart-line-path" />
         </svg>
@@ -872,72 +709,57 @@
     </div>
   </div>
 
-  <!-- Panel 3: Content Queue (Bottom Left) -->
+  <!-- Bottom Left Panel: Content Pipeline Queue -->
   <div class="dashboard-panel panel-bottom-left" id="panel-content-queue">
-    <div class="panel-header">
-      <div class="panel-title">
-        ⚙️ QUEUED_PIPELINES.SYS
-      </div>
-      <div class="panel-controls">
-        <div class="control-dot"></div>
-      </div>
+    <div class="panel-title">
+      ⚙️ QUEUED_PIPELINES.SYS
     </div>
     <div class="panel-body" id="content-queue-list">
-      <!-- Generated Dynamically by JS -->
+      <!-- Populated dynamically -->
     </div>
   </div>
 
-  <!-- Panel 4: Team Chat Panel (Bottom Right) -->
+  <!-- Bottom Right Panel: Core Team Chat Terminal log -->
   <div class="dashboard-panel panel-bottom-right" id="panel-team-chat">
-    <div class="panel-header">
-      <div class="panel-title">
-        💬 CORE_TEAM_CHAT.FEED
-      </div>
-      <div class="panel-controls">
-        <div class="control-dot"></div>
-      </div>
+    <div class="panel-title">
+      💬 CORE_TEAM_CHAT.FEED
     </div>
-    <div class="panel-body">
-      <div class="chat-terminal" id="terminal-feed">
-        <!-- Generated Dynamically by JS -->
-      </div>
-      <!-- Interactive Terminal Input -->
-      <form id="chat-input-form" onsubmit="handleChatSubmit(event)">
-        <div class="chat-input-container">
-          <div class="chat-prompt">&gt;</div>
-          <input type="text" class="chat-input" id="terminal-input" placeholder="Type command..." autocomplete="off">
-          <button type="submit" class="chat-send-btn">SEND</button>
-        </div>
-      </form>
+    <div class="chat-terminal" id="terminal-feed">
+      <!-- Logs generated dynamically -->
     </div>
+    <form id="chat-input-form" onsubmit="handleChatSubmit(event)">
+      <div class="chat-input-container">
+        <div class="chat-prompt">&gt;</div>
+        <input type="text" class="chat-input" id="terminal-input" placeholder="Type command..." autocomplete="off">
+        <button type="submit" class="chat-send-btn">SEND</button>
+      </div>
+    </form>
   </div>
 
   <!-- ==========================================================================
-       CENTER WALKING ZONE
+       CENTER WALKING SCENE
        ========================================================================== -->
   <div id="floor-zone">
     <div id="walking-track">
-      <!-- AI Characters walking sprites injected here by JS -->
+      <!-- AI Characters walking images injected by JS -->
     </div>
   </div>
 
   <!-- ==========================================================================
-       JAVASCRIPT LOGIC
+       SYSTEM TELEMETRY ENGINE (JAVASCRIPT)
        ========================================================================== -->
   <script>
     // ==========================================================================
-    // DATA CONFIGURATION
+    // CONFIGURATION AND STATE
     // ==========================================================================
     const AGENTS_CONFIG = {
       supervisor: {
         id: 'supervisor',
         name: 'Supervisor',
-        color: '#ffb700', // Neon Yellow
+        color: '#ffcc00', // Yellow
         status: 'active',
-        bottomOffset: 0, // vertical depth layering
-        duration: 8,
-        delay: 0,
-        filename: 'agent-supervisor.png',
+        bottomOffset: 0,
+        filename: 'agent-1-supervisor.png',
         lastActivity: 'Monitoring overall operations',
         tasks: ["Auditing system pipelines...", "Scheduling post feeds...", "Checking worker stats..."],
         messages: ["All agents, report status ✓", "Broadcasting pipeline tasks...", "System throughput is optimal."]
@@ -945,12 +767,10 @@
       productFinder: {
         id: 'productFinder',
         name: 'Product Finder',
-        color: '#39ff14', // Neon Green
+        color: '#00ff88', // Green
         status: 'active',
         bottomOffset: 8,
-        duration: 9.5,
-        delay: 1.5,
-        filename: 'agent-product-finder.png',
+        filename: 'agent-2-finder.png',
         lastActivity: 'Scraping Shopee trends',
         tasks: ["Scanning top tech categories...", "Filtering conversion coefficients...", "Scraping viral keywords..."],
         messages: ["Found 5 trending products!", "Ergonomic chair items are trending.", "Ergonomic keyboard scraper active."]
@@ -958,41 +778,35 @@
       clipSelector: {
         id: 'clipSelector',
         name: 'Clip Selector',
-        color: '#bd00ff', // Neon Purple
+        color: '#cc66ff', // Purple
         status: 'active',
         bottomOffset: 4,
-        duration: 11,
-        delay: 3,
-        filename: 'agent-clip-selector.png',
+        filename: 'agent-3-clip.png',
         lastActivity: 'Cutting product raw footage',
         tasks: ["Isolating CTR-hook frames...", "Cropping media ratios...", "Optimizing audio waveforms..."],
-        messages: ["Selected best clip for product #2", "Extracted tech hook frames.", "Audio tracks matching completes."]
+        messages: ["Best clip selected for #3", "Extracted tech hook frames.", "Audio tracks matching completes."]
       },
       videoMaker: {
         id: 'videoMaker',
         name: 'Video Maker',
-        color: '#ff0055', // Neon Pink
+        color: '#ff0055', // Pink
         status: 'active',
         bottomOffset: 12,
-        duration: 7,
-        delay: 2.5,
-        filename: 'agent-video-maker.png',
+        filename: 'agent-4-video.png',
         lastActivity: 'Blending overlay sequences',
         tasks: ["Rendering 1080p transitions...", "Stitching overlay scenes...", "Animating text labels..."],
-        messages: ["Rendering video #3...", "Video render completed! ✓", "Overlay graphics aligned."]
+        messages: ["Rendering video #4...", "Video render completed! ✓", "Overlay graphics aligned."]
       },
       captionWriter: {
         id: 'captionWriter',
         name: 'Caption Writer',
-        color: '#00f0ff', // Neon Cyan
+        color: '#00eeff', // Cyan
         status: 'active',
         bottomOffset: 2,
-        duration: 10,
-        delay: 4,
-        filename: 'agent-caption-writer.png',
+        filename: 'agent-5-caption.png',
         lastActivity: 'Drafting viral hooks',
         tasks: ["Drafting caption copy blocks...", "Formatting SEO keywords...", "Matching trending hashtags..."],
-        messages: ["Caption drafted, ready to post", "Engagement hook optimization ready.", "Hashtags metrics matched."]
+        messages: ["Caption ready, hooks drafted", "Engagement hook optimization ready.", "Hashtags metrics matched."]
       },
       postAgent: {
         id: 'postAgent',
@@ -1000,9 +814,7 @@
         color: '#ff00ea', // Magenta
         status: 'active',
         bottomOffset: 6,
-        duration: 8.5,
-        delay: 1,
-        filename: 'agent-post-agent.png',
+        filename: 'agent-6-post.png',
         lastActivity: 'Preparing media scheduling',
         tasks: ["Uploading assets to endpoint...", "Injecting tags metadata...", "Checking video link paths..."],
         messages: ["Posted to TikTok ✓", "TikTok publish task complete.", "Post scheduled successfully."]
@@ -1010,19 +822,17 @@
       analyticsAgent: {
         id: 'analyticsAgent',
         name: 'Analytics Agent',
-        color: '#00ffbc', // Emerald Green
+        color: '#00ffbc', // Emerald
         status: 'active',
         bottomOffset: 10,
-        duration: 12,
-        delay: 2,
-        filename: 'agent-analytics.png',
+        filename: 'agent-7-analytics.png',
         lastActivity: 'Recalculating ROI metrics',
         tasks: ["Polling CTR telemetry...", "Auditing payout commissions...", "Plotting metrics arrays..."],
         messages: ["CTR up 14% today 📈", "Average payout CTR +8% growth.", "Revenue margins telemetry green."]
       }
     };
 
-    // Tasks Queue mock data
+    // Queued pipelines items
     const INITIAL_QUEUE_TASKS = [
       { id: 1, title: 'Extract top tech products', time: '12:20', details: 'Product Finder scan complete.', status: 'done' },
       { id: 2, title: 'Cut hooks for Video #02', time: '12:22', details: 'Clip Selector rendering crops.', status: 'done' },
@@ -1031,36 +841,32 @@
       { id: 5, title: 'Schedule to TikTok Feed', time: '12:30', details: 'Post Agent await files upload.', status: 'pending' }
     ];
 
-    // Chart performance coordinates
+    // Chart performance lines
     const chartPoints = [30, 48, 25, 62, 54, 78, 60, 68, 85, 70, 92];
     const maxChartPoints = 14;
 
-    // Chat states
+    // Chat dialogue telemetry
     let activeBubbles = [];
     const maxActiveBubbles = 2;
     const bubbleTimeouts = {};
 
     // ==========================================================================
-    // INITIALIZATION & PROCESSORS
+    // INITIALIZATION & RENDER
     // ==========================================================================
 
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Render static panels
       renderAgentStatusPanel();
       renderContentQueuePanel();
       updateLineChart();
-
-      // 2. Inject walking characters
       initCharacters();
+      
+      // Auto Ticker chats dialogue loop (every 7 seconds)
+      setInterval(triggerAutoChat, 7000);
 
-      // 3. Start auto chat dialog ticker (every 6 seconds)
-      setInterval(triggerAutoChat, 6000);
-
-      // System greeting log
-      addTerminalChatLine('system', 'Monitoring link online. 7 agents initialized.', getFormattedTime());
+      addTerminalChatLine('system', 'System online. Monitoring link active.', getFormattedTime());
     });
 
-    // Render Panel 1: Agent Status
+    // Panel 1: Agent Status
     function renderAgentStatusPanel() {
       const container = document.getElementById('agent-status-list');
       container.innerHTML = '';
@@ -1082,14 +888,14 @@
           </div>
           <div class="agent-status-toggle">
             <span class="status-dot ${config.status}" id="status-dot-${config.id}"></span>
-            <span class="status-text" id="status-txt-${config.id}">${config.status}</span>
+            <span class="status-text" id="status-txt-${config.id}">${config.status === 'active' ? 'active' : 'idle'}</span>
           </div>
         `;
         container.appendChild(item);
       });
     }
 
-    // Render Panel 3: Content Queue
+    // Panel 3: Pipelines Queued Tasks
     function renderContentQueuePanel() {
       const container = document.getElementById('content-queue-list');
       container.innerHTML = '';
@@ -1102,7 +908,7 @@
             <span class="queue-task-title">${task.title}</span>
             <span class="badge ${task.status}">${task.status}</span>
           </div>
-          <div class="queue-task-header" style="margin-top:2px;">
+          <div class="queue-task-header" style="margin-top:1px;">
             <span class="queue-task-details">${task.details}</span>
             <span class="queue-task-time">${task.time}</span>
           </div>
@@ -1111,16 +917,16 @@
       });
     }
 
-    // Render SVG Line Chart
+    // Render SVG chart line
     function updateLineChart() {
       const chartWidth = 300;
-      const chartHeight = 70;
+      const chartHeight = 50;
       const maxVal = 100;
       const xSpacing = chartWidth / (chartPoints.length - 1);
       
       const points = chartPoints.map((val, idx) => {
         const x = idx * xSpacing;
-        const y = chartHeight - 8 - ((val / maxVal) * (chartHeight - 16));
+        const y = chartHeight - 6 - ((val / maxVal) * (chartHeight - 12));
         return { x, y };
       });
       
@@ -1160,7 +966,7 @@
           </div>
 
           <!-- Sprite wrapper with direct image reference -->
-          <div class="character-visual-box">
+          <div class="character-visual-box" style="--agent-color: ${config.color}">
             <img class="sprite-img" src="./${config.filename}" alt="${config.name}">
           </div>
         `;
@@ -1174,7 +980,7 @@
           hideSpeechBubble(config.id);
         });
 
-        // Click character to toggle Active/Idle
+        // Click character to toggle Active/Idle status
         char.addEventListener('click', () => {
           toggleAgentState(config.id);
         });
@@ -1193,7 +999,7 @@
       const dot = document.getElementById(`status-dot-${agentId}`);
       const txt = document.getElementById(`status-txt-${agentId}`);
       if (dot) dot.className = `status-dot ${nextStatus}`;
-      if (txt) txt.innerText = nextStatus;
+      if (txt) txt.innerText = nextStatus === 'active' ? 'active' : 'idle';
       
       // Update walk track element state & indicators
       const charEl = document.getElementById(`agent-${agentId}`);
@@ -1204,10 +1010,10 @@
       if (charEl) {
         if (nextStatus === 'idle') {
           charEl.classList.add('idle-state');
-          config.lastActivity = 'Idling thread standby.';
+          config.lastActivity = 'Idling standby.';
         } else {
           charEl.classList.remove('idle-state');
-          config.lastActivity = 'Resuming telemetry walking.';
+          config.lastActivity = 'Resuming walk telemetry.';
         }
       }
       
@@ -1216,7 +1022,7 @@
 
       // Add log message to Team Chat terminal feed
       const timeStr = getFormattedTime();
-      addTerminalChatLine('system', `Agent ${config.name} set to ${nextStatus.toUpperCase()}`, timeStr);
+      addTerminalChatLine('system', `Agent ${config.name} state: ${nextStatus.toUpperCase()}`, timeStr);
     }
 
     // Get random task of agent for hover display
@@ -1235,7 +1041,7 @@
     // CHAT & LOGIC FEED ACTIONS
     // ==========================================================================
 
-    // Display floating speech bubble
+    // Display floating speech bubble (fades in 0.3s, stays 3s, fades out 0.5s)
     function showSpeechBubble(agentId, message) {
       const bubble = document.getElementById(`bubble-${agentId}`);
       if (!bubble) return;
@@ -1247,6 +1053,7 @@
       }
 
       bubble.innerText = message;
+      bubble.classList.remove('fade-out');
       bubble.classList.add('visible');
 
       if (!activeBubbles.includes(agentId)) {
@@ -1259,17 +1066,18 @@
         hideSpeechBubble(oldestId);
       }
 
-      // Stay for 3 seconds, then fade out
+      // Stay for 3 seconds, then trigger fade-out
       bubbleTimeouts[agentId] = setTimeout(() => {
         hideSpeechBubble(agentId);
       }, 3000);
     }
 
-    // Hide speech bubble
+    // Hide speech bubble (triggers 0.5s fade out)
     function hideSpeechBubble(agentId) {
       const bubble = document.getElementById(`bubble-${agentId}`);
       if (bubble) {
         bubble.classList.remove('visible');
+        bubble.classList.add('fade-out');
       }
       activeBubbles = activeBubbles.filter(id => id !== agentId);
       if (bubbleTimeouts[agentId]) {
@@ -1318,7 +1126,7 @@
       }
     }
 
-    // Auto dialogue chat ticker triggered every 6 seconds
+    // Auto dialogue chat ticker triggered every 7 seconds
     function triggerAutoChat() {
       // Pick random agent
       const keys = Object.keys(AGENTS_CONFIG);
@@ -1362,20 +1170,20 @@
       // Mock interactive replies from Supervisor bot
       setTimeout(() => {
         const replyTime = getFormattedTime();
-        let reply = "Processing transmission...";
+        let reply = "Processing command...";
         const norm = text.toLowerCase();
         
         if (norm.includes('status')) {
-          reply = "All modules online. Checking overall system metrics.";
+          reply = "All subagents functional. Overall pipeline throughput 100%.";
         } else if (norm.includes('active') || norm.includes('run')) {
-          reply = "Command received. Commencing all standby agent walk routines.";
+          reply = "Activating all standby bots.";
           Object.keys(AGENTS_CONFIG).forEach(key => {
             if (AGENTS_CONFIG[key].status !== 'active') {
               toggleAgentState(key);
             }
           });
         } else if (norm.includes('idle') || norm.includes('stop')) {
-          reply = "Acknowledged. Pausing active walking cycles.";
+          reply = "Setting active bots to standby mode.";
           Object.keys(AGENTS_CONFIG).forEach(key => {
             if (AGENTS_CONFIG[key].status === 'active') {
               toggleAgentState(key);
@@ -1383,9 +1191,9 @@
           });
         } else if (norm.includes('clear')) {
           document.getElementById('terminal-feed').innerHTML = '';
-          reply = "Console feed buffer successfully flushed.";
+          reply = "Log feed cleared.";
         } else {
-          reply = "Command parsed. Syncing affiliate pipeline protocols.";
+          reply = "Command received. Syncing pipeline cache.";
         }
         
         showSpeechBubble('supervisor', reply);
@@ -1408,7 +1216,7 @@
       clickEl.innerText = clicks.toLocaleString();
 
       // Posts published
-      if (Math.random() > 0.88) {
+      if (Math.random() > 0.85) {
         const postEl = document.getElementById('metric-posts');
         let posts = parseInt(postEl.innerText);
         posts += 1;
