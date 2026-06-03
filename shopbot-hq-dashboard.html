@@ -460,8 +460,8 @@
     .agent-character {
       position: absolute;
       bottom: 0;
-      width: 60px;
-      height: 100px;
+      width: 80px;
+      height: 140px;
       cursor: pointer;
       pointer-events: auto;
       transform-origin: bottom center;
@@ -496,8 +496,8 @@
 
     /* Sprite Wrapper */
     .character-visual-box {
-      width: 60px;
-      height: 100px;
+      width: 80px;
+      height: 140px;
       display: flex;
       justify-content: center;
       align-items: flex-end;
@@ -505,7 +505,7 @@
     }
 
     .sprite-img {
-      height: 100px;
+      height: 140px;
       width: auto;
       object-fit: contain;
       image-rendering: pixelated;
@@ -514,25 +514,25 @@
     }
 
     /* CSS TranslateX walking cycles (position outer container, flip inner img) */
-    .walk-supervisor { animation: walk-pos-anim 9s linear infinite; animation-delay: 0s; }
-    .walk-productFinder { animation: walk-pos-anim 11s linear infinite; animation-delay: 1.5s; }
-    .walk-clipSelector { animation: walk-pos-anim 8s linear infinite; animation-delay: 3s; }
-    .walk-videoMaker { animation: walk-pos-anim 13s linear infinite; animation-delay: 2s; }
-    .walk-captionWriter { animation: walk-pos-anim 10s linear infinite; animation-delay: 4s; }
-    .walk-postAgent { animation: walk-pos-anim 7s linear infinite; animation-delay: 1s; }
-    .walk-analyticsAgent { animation: walk-pos-anim 12s linear infinite; animation-delay: 2.5s; }
+    .walk-supervisor { animation: walk-pos-anim 26s linear infinite; animation-delay: 0s; }
+    .walk-productFinder { animation: walk-pos-anim 32s linear infinite; animation-delay: 1.5s; }
+    .walk-clipSelector { animation: walk-pos-anim 24s linear infinite; animation-delay: 3s; }
+    .walk-videoMaker { animation: walk-pos-anim 36s linear infinite; animation-delay: 2s; }
+    .walk-captionWriter { animation: walk-pos-anim 30s linear infinite; animation-delay: 4s; }
+    .walk-postAgent { animation: walk-pos-anim 20s linear infinite; animation-delay: 1s; }
+    .walk-analyticsAgent { animation: walk-pos-anim 34s linear infinite; animation-delay: 2.5s; }
 
-    .walk-supervisor .sprite-img { animation: walk-flip-anim 9s linear infinite; animation-delay: 0s; }
-    .walk-productFinder .sprite-img { animation: walk-flip-anim 11s linear infinite; animation-delay: 1.5s; }
-    .walk-clipSelector .sprite-img { animation: walk-flip-anim 8s linear infinite; animation-delay: 3s; }
-    .walk-videoMaker .sprite-img { animation: walk-flip-anim 13s linear infinite; animation-delay: 2s; }
-    .walk-captionWriter .sprite-img { animation: walk-flip-anim 10s linear infinite; animation-delay: 4s; }
-    .walk-postAgent .sprite-img { animation: walk-flip-anim 7s linear infinite; animation-delay: 1s; }
-    .walk-analyticsAgent .sprite-img { animation: walk-flip-anim 12s linear infinite; animation-delay: 2.5s; }
+    .walk-supervisor .sprite-img { animation: walk-flip-anim 26s linear infinite; animation-delay: 0s; }
+    .walk-productFinder .sprite-img { animation: walk-flip-anim 32s linear infinite; animation-delay: 1.5s; }
+    .walk-clipSelector .sprite-img { animation: walk-flip-anim 24s linear infinite; animation-delay: 3s; }
+    .walk-videoMaker .sprite-img { animation: walk-flip-anim 36s linear infinite; animation-delay: 2s; }
+    .walk-captionWriter .sprite-img { animation: walk-flip-anim 30s linear infinite; animation-delay: 4s; }
+    .walk-postAgent .sprite-img { animation: walk-flip-anim 20s linear infinite; animation-delay: 1s; }
+    .walk-analyticsAgent .sprite-img { animation: walk-flip-anim 34s linear infinite; animation-delay: 2.5s; }
 
     /* Waddle & Breath */
     .agent-character:not(.idle-state) .character-visual-box {
-      animation: waddle-action 0.5s infinite alternate ease-in-out;
+      animation: waddle-action 0.9s infinite alternate ease-in-out;
     }
     .agent-character.idle-state .character-visual-box {
       animation: breathe-action 1.5s infinite alternate ease-in-out;
@@ -540,7 +540,7 @@
 
     @keyframes walk-pos-anim {
       0% { transform: translateX(0); }
-      50% { transform: translateX(calc(100vw - 592px - 60px)); }
+      50% { transform: translateX(calc(100vw - 592px - 80px)); }
       100% { transform: translateX(0); }
     }
     
@@ -551,8 +551,8 @@
     }
 
     @keyframes waddle-action {
-      0% { transform: translateY(0) rotate(-2deg); }
-      100% { transform: translateY(-5px) rotate(2deg); }
+      0% { transform: translateY(0) rotate(-1.5deg); }
+      100% { transform: translateY(-6px) rotate(1.5deg); }
     }
     @keyframes breathe-action {
       0% { transform: translateY(0) scaleY(1); }
@@ -582,7 +582,7 @@
     /* Speech bubbles */
     .speech-bubble {
       position: absolute;
-      bottom: 110px; /* sit above character height of 100px */
+      bottom: 150px; /* sit above character height of 140px */
       left: 50%;
       transform: translateX(-50%) scale(0.8);
       transform-origin: bottom center;
