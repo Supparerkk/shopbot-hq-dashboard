@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopBot HQ Monitor</title>
+  
+  <!-- Fonts from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. CORE SYSTEM LAYOUT
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: #03030f;
+      background-image: url('./background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+      font-family: 'Share Tech Mono', monospace;
+      color: #c8f0c8;
+    }
+
+    /* Screen vignette scanlines overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.2) 50%
+      );
+      background-size: 100% 4px;
+      z-index: 999;
+      pointer-events: none;
+    }
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 0) 40%,
+        rgba(0, 0, 0, 0.5) 100%
+      );
+      z-index: 998;
+      pointer-events: none;
+    }
+
+    /* Scrollbars retro styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(5, 5, 20, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00eeff;
+      border-radius: 3px;
+      box-shadow: 0 0 4px #00eeff;
+    }
+
+    /* ==========================================================================
+       2. RETRO DASHBOARD PANELS
+       ========================================================================== */
+    .dashboard-panel {
+      background: rgba(4, 6, 20, 0.90);
+      border-radius: 6px;
+      padding: 16px;
+      position: fixed;
+      width: 280px;
+      font-family: 'Share Tech Mono', monospace;
+      z-index: 100;
+      color: #c8f0c8;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Placements */
+    .panel-top-left {
+      top: 16px;
+      left: 16px;
+      height: calc(50vh - 24px);
+      border: 1.5px solid #00ff88;
+      box-shadow: 0 0 10px #00ff88;
+    }
+
+    .panel-top-right {
+      top: 16px;
+      right: 16px;
+      height: calc(50vh - 24px);
+      border: 1.5px solid #00eeff;
+      box-shadow: 0 0 10px #00eeff;
+    }
+
+    .panel-bottom-left {
+      bottom: 16px;
+      left: 16px;
+      height: calc(50vh - 24px);
+      border: 1.5px solid #ffcc00;
+      box-shadow: 0 0 10px #ffcc00;
+    }
+
+    .panel-bottom-right {
+      bottom: 16px;
+      right: 16px;
+      height: 300px;
+      border: 1.5px solid #cc66ff;
+      box-shadow: 0 0 10px #cc66ff;
+    }
+
+    /* Titles styling */
+    .panel-title {
+      font-family: 'Press Start 2P', cursive, monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-top-left .panel-title { color: #00ff88; text-shadow: 0 0 4px #00ff88; }
+    .panel-top-right .panel-title { color: #00eeff; text-shadow: 0 0 4px #00eeff; }
+    .panel-bottom-left .panel-title { color: #ffcc00; text-shadow: 0 0 4px #ffcc00; }
+    .panel-bottom-right .panel-title { color: #cc66ff; text-shadow: 0 0 4px #cc66ff; }
+
+    .panel-body {
+      overflow-y: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Panel elements */
+    .agent-status-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(0, 255, 136, 0.1);
+      padding: 6px 8px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .agent-status-item:hover {
+      background: rgba(0, 255, 136, 0.05);
+      border-color: #00ff88;
+    }
+    .agent-info-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      flex-grow: 1;
+    }
+    .agent-avatar-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 1px;
+      background-color: var(--agent-color);
+      box-shadow: 0 0 4px var(--agent-color);
+      flex-shrink: 0;
+    }
+    .agent-meta-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .agent-mini-name {
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .agent-mini-activity {
+      font-size: 11px;
+      color: #82a882;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .agent-status-toggle {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,0,0,0.4);
+      padding: 2px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.active { background-color: #00ff88; box-shadow: 0 0 4px #00ff88; }
+    .status-dot.idle { background-color: #718096; box-shadow: none; }
+    
+    .status-text {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    /* Metric Grid */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .metric-row {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 6px 8px;
+      border-radius: 4px;
+      border-left: 2px solid var(--theme-color);
+    }
+    .metric-row.rev { --theme-color: #00ff88; }
+    .metric-row.post { --theme-color: #00eeff; }
+    .metric-row.click { --theme-color: #cc66ff; }
+    .metric-row.prod { --theme-color: #ffcc00; grid-column: span 2; }
+
+    .metric-label {
+      font-size: 10px;
+      color: #82a882;
+      text-transform: uppercase;
+    }
+    .metric-val {
+      font-size: 13px;
+      color: #fff;
+      margin-top: 2px;
+      font-weight: bold;
+    }
+    .metric-val.revenue { color: #00ff88; }
+    
+    /* SVG line chart */
+    .chart-container {
+      margin-top: 2px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      border: 1px solid rgba(0, 238, 255, 0.15);
+      padding: 4px;
+    }
+    .chart-title {
+      font-size: 10px;
+      color: #00eeff;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+      font-weight: bold;
+    }
+    .chart-svg {
+      width: 100%;
+      height: 50px;
+      overflow: visible;
+    }
+    .chart-line {
+      fill: none;
+      stroke: #00eeff;
+      stroke-width: 1.5;
+      filter: drop-shadow(0 0 2px rgba(0, 238, 255, 0.5));
+    }
+    .chart-area {
+      fill: url(#chart-gradient);
+      opacity: 0.15;
+    }
+
+    /* Content Queue */
+    .queue-task {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 6px;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .queue-task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+    .queue-task-title {
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .queue-task-time {
+      font-size: 10px;
+      color: #82a882;
+    }
+    .queue-task-details {
+      font-size: 10px;
+      color: #82a882;
+    }
+    .badge {
+      font-family: 'Press Start 2P', cursive, monospace;
+      font-size: 7px;
+      padding: 1px 4px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+    .badge.pending {
+      color: #ffcc00;
+      background: rgba(255, 204, 0, 0.08);
+      border-color: rgba(255, 204, 0, 0.25);
+    }
+    .badge.running {
+      color: #00eeff;
+      background: rgba(0, 238, 255, 0.08);
+      border-color: rgba(0, 238, 255, 0.25);
+    }
+    .badge.done {
+      color: #00ff88;
+      background: rgba(0, 255, 136, 0.08);
+      border-color: rgba(0, 255, 136, 0.25);
+    }
+
+    /* Terminal logs */
+    .chat-terminal {
+      background: rgba(4, 4, 14, 0.95);
+      border: 1px solid rgba(204, 102, 255, 0.2);
+      border-radius: 4px;
+      flex-grow: 1;
+      padding: 6px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      line-height: 1.3;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+      margin-bottom: 6px;
+    }
+    .chat-line {
+      animation: slide-in-chat 0.2s ease-out forwards;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      padding-bottom: 2px;
+      word-break: break-word;
+    }
+    @keyframes slide-in-chat {
+      from { transform: translateY(3px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .chat-time {
+      color: #82a882;
+      font-size: 9px;
+      margin-right: 3px;
+    }
+    .chat-sender {
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    .chat-msg {
+      color: #c8f0c8;
+    }
+
+    .sender-system { color: #8a8ab0; }
+    .sender-user { color: #fff; text-shadow: 0 0 3px #00eeff; }
+    .sender-supervisor { color: #ffcc00; }
+    .sender-productFinder { color: #00ff88; }
+    .sender-clipSelector { color: #cc66ff; }
+    .sender-videoMaker { color: #ff0055; }
+    .sender-captionWriter { color: #00eeff; }
+    .sender-postAgent { color: #ff00ea; }
+    .sender-analyticsAgent { color: #00ffbc; }
+
+    /* Interactive input */
+    .chat-input-container {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(204, 102, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .chat-prompt {
+      color: #cc66ff;
+      padding: 4px 2px 4px 8px;
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .chat-input {
+      flex-grow: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      padding: 4px 6px;
+    }
+    .chat-send-btn {
+      background: rgba(204, 102, 255, 0.15);
+      border: none;
+      border-left: 1px solid rgba(204, 102, 255, 0.2);
+      color: #cc66ff;
+      cursor: pointer;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 10px;
+    }
+    .chat-send-btn:hover {
+      background: rgba(204, 102, 255, 0.3);
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       3. CENTER CHARACTERS WALKING ZONE
+       ========================================================================== */
+    #floor-zone {
+      position: absolute;
+      top: 58%;
+      height: 24%;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    #walking-track {
+      position: absolute;
+      left: 296px;
+      width: calc(100vw - 592px);
+      height: 100%;
+      overflow: visible;
+    }
+
+    .agent-character {
+      position: absolute;
+      bottom: 0;
+      width: 60px;
+      height: 100px;
+      cursor: pointer;
+      pointer-events: auto;
+      transform-origin: bottom center;
+    }
+
+    /* Floating labels */
+    .name-tag-wrapper {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(5, 5, 20, 0.9);
+      border: 1px solid var(--agent-color);
+      padding: 1px 6px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .name-tag {
+      font-size: 10px;
+      color: #fff;
+      font-weight: bold;
+      font-family: 'Share Tech Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sprite Wrapper */
+    .character-visual-box {
+      width: 60px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      transform-origin: bottom center;
+    }
+
+    .sprite-img {
+      height: 100px;
+      width: auto;
+      object-fit: contain;
+      image-rendering: pixelated;
+      transform-origin: bottom center;
+      display: block;
+    }
+
+    /* CSS TranslateX walking cycles (position outer container, flip inner img) */
+    .walk-supervisor { animation: walk-pos-anim 9s linear infinite; animation-delay: 0s; }
+    .walk-productFinder { animation: walk-pos-anim 11s linear infinite; animation-delay: 1.5s; }
+    .walk-clipSelector { animation: walk-pos-anim 8s linear infinite; animation-delay: 3s; }
+    .walk-videoMaker { animation: walk-pos-anim 13s linear infinite; animation-delay: 2s; }
+    .walk-captionWriter { animation: walk-pos-anim 10s linear infinite; animation-delay: 4s; }
+    .walk-postAgent { animation: walk-pos-anim 7s linear infinite; animation-delay: 1s; }
+    .walk-analyticsAgent { animation: walk-pos-anim 12s linear infinite; animation-delay: 2.5s; }
+
+    .walk-supervisor .sprite-img { animation: walk-flip-anim 9s linear infinite; animation-delay: 0s; }
+    .walk-productFinder .sprite-img { animation: walk-flip-anim 11s linear infinite; animation-delay: 1.5s; }
+    .walk-clipSelector .sprite-img { animation: walk-flip-anim 8s linear infinite; animation-delay: 3s; }
+    .walk-videoMaker .sprite-img { animation: walk-flip-anim 13s linear infinite; animation-delay: 2s; }
+    .walk-captionWriter .sprite-img { animation: walk-flip-anim 10s linear infinite; animation-delay: 4s; }
+    .walk-postAgent .sprite-img { animation: walk-flip-anim 7s linear infinite; animation-delay: 1s; }
+    .walk-analyticsAgent .sprite-img { animation: walk-flip-anim 12s linear infinite; animation-delay: 2.5s; }
+
+    /* Waddle & Breath */
+    .agent-character:not(.idle-state) .character-visual-box {
+      animation: waddle-action 0.5s infinite alternate ease-in-out;
+    }
+    .agent-character.idle-state .character-visual-box {
+      animation: breathe-action 1.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes walk-pos-anim {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(calc(100vw - 592px - 60px)); }
+      100% { transform: translateX(0); }
+    }
+    
+    @keyframes walk-flip-anim {
+      0%, 49.9% { transform: scaleX(1); }
+      50%, 99.9% { transform: scaleX(-1); }
+      100% { transform: scaleX(1); }
+    }
+
+    @keyframes waddle-action {
+      0% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(-5px) rotate(2deg); }
+    }
+    @keyframes breathe-action {
+      0% { transform: translateY(0) scaleY(1); }
+      100% { transform: translateY(-2px) scaleY(0.97); }
+    }
+
+    /* Pause walking hover states */
+    .agent-character:hover {
+      animation-play-state: paused !important;
+    }
+    .agent-character:hover .character-visual-box,
+    .agent-character:hover .sprite-img {
+      animation-play-state: paused !important;
+    }
+    .agent-character:hover .sprite-img {
+      filter: drop-shadow(0 0 6px var(--agent-color));
+    }
+
+    /* Idle override pauses */
+    .agent-character.idle-state {
+      animation-play-state: paused !important;
+    }
+    .agent-character.idle-state .sprite-img {
+      animation-play-state: paused !important;
+    }
+
+    /* Speech bubbles */
+    .speech-bubble {
+      position: absolute;
+      bottom: 110px; /* sit above character height of 100px */
+      left: 50%;
+      transform: translateX(-50%) scale(0.8);
+      transform-origin: bottom center;
+      background: #fff;
+      color: #050510;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.25;
+      width: 170px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+      z-index: 500;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      border: 1.5px solid #050510;
+      pointer-events: none;
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: bold;
+    }
+
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px 8px 0;
+      border-style: solid;
+      border-color: #fff transparent;
+      display: block;
+      width: 0;
+    }
+
+    .speech-bubble::before {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 9px 9px 0;
+      border-style: solid;
+      border-color: #050510 transparent;
+      display: block;
+      width: 0;
+      z-index: -1;
+    }
+
+    .speech-bubble.visible {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    
+    .speech-bubble.fade-out {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.8);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Retro HUD Top Title Bar -->
+  <header class="header-hud">
+    <div class="hud-title">&gt; SHOPBOT HQ // MONITOR SYSTEM &lt;</div>
+  </header>
+
+  <!-- ==========================================================================
+       4 PANELS CORNERS CONSTRAINED
+       ========================================================================== -->
+
+  <!-- Top Left Panel: Agents Status -->
+  <div class="dashboard-panel panel-top-left" id="panel-agent-status">
+    <div class="panel-title">
+      <span class="status-dot active"></span> SYSTEM_AGENTS.LOG
+    </div>
+    <div class="panel-body" id="agent-status-list">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- Top Right Panel: Affiliate metrics counter -->
+  <div class="dashboard-panel panel-top-right" id="panel-affiliate-today">
+    <div class="panel-title">
+      ⚡ AFFILIATE_STATS.HUD
+    </div>
+    <div class="panel-body">
+      <div class="metric-grid">
+        <div class="metric-row rev">
+          <span class="metric-label">Daily Revenue</span>
+          <span class="metric-val revenue" id="metric-revenue">฿3,475.09</span>
+        </div>
+        <div class="metric-row post">
+          <span class="metric-label">Posts Published</span>
+          <span class="metric-val" id="metric-posts">34</span>
+        </div>
+        <div class="metric-row click">
+          <span class="metric-label">Clicks Logged</span>
+          <span class="metric-val" id="metric-clicks">2,115</span>
+        </div>
+        <div class="metric-row prod">
+          <span class="metric-label">Top Affiliate Product</span>
+          <span class="metric-val" id="metric-top-product" style="color: #ffcc00; font-size:12px;">Wireless Earbuds X3</span>
+        </div>
+      </div>
+
+      <!-- Neon Cyan SVG Line chart metrics CTR -->
+      <div class="chart-container">
+        <div class="chart-title">Real-Time Performance CTR</div>
+        <svg class="chart-svg" viewBox="0 0 300 50" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00eeff" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="#00eeff" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="12" x2="300" y2="12" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="25" x2="300" y2="25" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <line x1="0" y1="38" x2="300" y2="38" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+          <path class="chart-area" d="" id="chart-area-path" />
+          <path class="chart-line" d="" id="chart-line-path" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Left Panel: Content Pipeline Queue -->
+  <div class="dashboard-panel panel-bottom-left" id="panel-content-queue">
+    <div class="panel-title">
+      ⚙️ QUEUED_PIPELINES.SYS
+    </div>
+    <div class="panel-body" id="content-queue-list">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- Bottom Right Panel: Core Team Chat Terminal log -->
+  <div class="dashboard-panel panel-bottom-right" id="panel-team-chat">
+    <div class="panel-title">
+      💬 CORE_TEAM_CHAT.FEED
+    </div>
+    <div class="chat-terminal" id="terminal-feed">
+      <!-- Logs generated dynamically -->
+    </div>
+    <form id="chat-input-form" onsubmit="handleChatSubmit(event)">
+      <div class="chat-input-container">
+        <div class="chat-prompt">&gt;</div>
+        <input type="text" class="chat-input" id="terminal-input" placeholder="Type command..." autocomplete="off">
+        <button type="submit" class="chat-send-btn">SEND</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ==========================================================================
+       CENTER WALKING SCENE
+       ========================================================================== -->
+  <div id="floor-zone">
+    <div id="walking-track">
+      <!-- AI Characters walking images injected by JS -->
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SYSTEM TELEMETRY ENGINE (JAVASCRIPT)
+       ========================================================================== -->
+  <script>
+    // ==========================================================================
+    // CONFIGURATION AND STATE
+    // ==========================================================================
+    const AGENTS_CONFIG = {
+      supervisor: {
+        id: 'supervisor',
+        name: 'Supervisor',
+        color: '#ffcc00', // Yellow
+        status: 'active',
+        bottomOffset: 0,
+        filename: 'agent-1-supervisor.png',
+        lastActivity: 'Monitoring overall operations',
+        tasks: ["Auditing system pipelines...", "Scheduling post feeds...", "Checking worker stats..."],
+        messages: ["All agents, report status ✓", "Broadcasting pipeline tasks...", "System throughput is optimal."]
+      },
+      productFinder: {
+        id: 'productFinder',
+        name: 'Product Finder',
+        color: '#00ff88', // Green
+        status: 'active',
+        bottomOffset: 8,
+        filename: 'agent-2-finder.png',
+        lastActivity: 'Scraping Shopee trends',
+        tasks: ["Scanning top tech categories...", "Filtering conversion coefficients...", "Scraping viral keywords..."],
+        messages: ["Found 5 trending products!", "Ergonomic chair items are trending.", "Ergonomic keyboard scraper active."]
+      },
+      clipSelector: {
+        id: 'clipSelector',
+        name: 'Clip Selector',
+        color: '#cc66ff', // Purple
+        status: 'active',
+        bottomOffset: 4,
+        filename: 'agent-3-clip.png',
+        lastActivity: 'Cutting product raw footage',
+        tasks: ["Isolating CTR-hook frames...", "Cropping media ratios...", "Optimizing audio waveforms..."],
+        messages: ["Best clip selected for #3", "Extracted tech hook frames.", "Audio tracks matching completes."]
+      },
+      videoMaker: {
+        id: 'videoMaker',
+        name: 'Video Maker',
+        color: '#ff0055', // Pink
+        status: 'active',
+        bottomOffset: 12,
+        filename: 'agent-4-video.png',
+        lastActivity: 'Blending overlay sequences',
+        tasks: ["Rendering 1080p transitions...", "Stitching overlay scenes...", "Animating text labels..."],
+        messages: ["Rendering video #4...", "Video render completed! ✓", "Overlay graphics aligned."]
+      },
+      captionWriter: {
+        id: 'captionWriter',
+        name: 'Caption Writer',
+        color: '#00eeff', // Cyan
+        status: 'active',
+        bottomOffset: 2,
+        filename: 'agent-5-caption.png',
+        lastActivity: 'Drafting viral hooks',
+        tasks: ["Drafting caption copy blocks...", "Formatting SEO keywords...", "Matching trending hashtags..."],
+        messages: ["Caption ready, hooks drafted", "Engagement hook optimization ready.", "Hashtags metrics matched."]
+      },
+      postAgent: {
+        id: 'postAgent',
+        name: 'Post Agent',
+        color: '#ff00ea', // Magenta
+        status: 'active',
+        bottomOffset: 6,
+        filename: 'agent-6-post.png',
+        lastActivity: 'Preparing media scheduling',
+        tasks: ["Uploading assets to endpoint...", "Injecting tags metadata...", "Checking video link paths..."],
+        messages: ["Posted to TikTok ✓", "TikTok publish task complete.", "Post scheduled successfully."]
+      },
+      analyticsAgent: {
+        id: 'analyticsAgent',
+        name: 'Analytics Agent',
+        color: '#00ffbc', // Emerald
+        status: 'active',
+        bottomOffset: 10,
+        filename: 'agent-7-analytics.png',
+        lastActivity: 'Recalculating ROI metrics',
+        tasks: ["Polling CTR telemetry...", "Auditing payout commissions...", "Plotting metrics arrays..."],
+        messages: ["CTR up 14% today 📈", "Average payout CTR +8% growth.", "Revenue margins telemetry green."]
+      }
+    };
+
+    // Queued pipelines items
+    const INITIAL_QUEUE_TASKS = [
+      { id: 1, title: 'Extract top tech products', time: '12:20', details: 'Product Finder scan complete.', status: 'done' },
+      { id: 2, title: 'Cut hooks for Video #02', time: '12:22', details: 'Clip Selector rendering crops.', status: 'done' },
+      { id: 3, title: 'Compile dashcam promo', time: '12:24', details: 'Video Maker rendering layout.', status: 'running' },
+      { id: 4, title: 'Write optimized viral hook', time: '12:25', details: 'Caption Writer copy writing.', status: 'pending' },
+      { id: 5, title: 'Schedule to TikTok Feed', time: '12:30', details: 'Post Agent await files upload.', status: 'pending' }
+    ];
+
+    // Chart performance lines
+    const chartPoints = [30, 48, 25, 62, 54, 78, 60, 68, 85, 70, 92];
+    const maxChartPoints = 14;
+
+    // Chat dialog telemetry
+    let activeBubbles = [];
+    const maxActiveBubbles = 2;
+    const bubbleTimeouts = {};
+
+    // ==========================================================================
+    // INITIALIZATION & RENDER
+    // ==========================================================================
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAgentStatusPanel();
+      renderContentQueuePanel();
+      updateLineChart();
+      initCharacters();
+      
+      // Auto Ticker chats dialogue loop (every 7 seconds)
+      setInterval(triggerAutoChat, 7000);
+
+      addTerminalChatLine('system', 'System online. Monitoring link active.', getFormattedTime());
+    });
+
+    // Panel 1: Agent Status
+    function renderAgentStatusPanel() {
+      const container = document.getElementById('agent-status-list');
+      container.innerHTML = '';
+      
+      Object.keys(AGENTS_CONFIG).forEach(key => {
+        const config = AGENTS_CONFIG[key];
+        const item = document.createElement('div');
+        item.className = 'agent-status-item';
+        item.id = `status-item-${config.id}`;
+        item.onclick = () => toggleAgentState(config.id);
+        
+        item.innerHTML = `
+          <div class="agent-info-left">
+            <div class="agent-avatar-indicator" style="--agent-color: ${config.color}"></div>
+            <div class="agent-meta-details">
+              <div class="agent-mini-name">${config.name}</div>
+              <div class="agent-mini-activity" id="activity-text-${config.id}">${config.lastActivity}</div>
+            </div>
+          </div>
+          <div class="agent-status-toggle">
+            <span class="status-dot ${config.status}" id="status-dot-${config.id}"></span>
+            <span class="status-text" id="status-txt-${config.id}">${config.status === 'active' ? 'active' : 'idle'}</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Panel 3: Pipelines Queued Tasks
+    function renderContentQueuePanel() {
+      const container = document.getElementById('content-queue-list');
+      container.innerHTML = '';
+      
+      INITIAL_QUEUE_TASKS.forEach(task => {
+        const el = document.createElement('div');
+        el.className = 'queue-task';
+        el.innerHTML = `
+          <div class="queue-task-header">
+            <span class="queue-task-title">${task.title}</span>
+            <span class="badge ${task.status}">${task.status}</span>
+          </div>
+          <div class="queue-task-header" style="margin-top:1px;">
+            <span class="queue-task-details">${task.details}</span>
+            <span class="queue-task-time">${task.time}</span>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    // Render SVG chart line
+    function updateLineChart() {
+      const chartWidth = 300;
+      const chartHeight = 50;
+      const maxVal = 100;
+      const xSpacing = chartWidth / (chartPoints.length - 1);
+      
+      const points = chartPoints.map((val, idx) => {
+        const x = idx * xSpacing;
+        const y = chartHeight - 6 - ((val / maxVal) * (chartHeight - 12));
+        return { x, y };
+      });
+      
+      const lineD = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+      const areaD = `${lineD} L ${points[points.length - 1].x.toFixed(1)} ${chartHeight} L 0 ${chartHeight} Z`;
+      
+      document.getElementById('chart-line-path').setAttribute('d', lineD);
+      document.getElementById('chart-area-path').setAttribute('d', areaD);
+    }
+
+    // Inject Characters in Floor Zone Walkway
+    function initCharacters() {
+      const track = document.getElementById('walking-track');
+      track.innerHTML = '';
+      
+      const agentKeys = Object.keys(AGENTS_CONFIG);
+      agentKeys.forEach((key, index) => {
+        const config = AGENTS_CONFIG[key];
+        
+        // Define Character div container
+        const char = document.createElement('div');
+        char.className = `agent-character walk-${config.id}`;
+        char.id = `agent-${config.id}`;
+        
+        // Depth layering bottom positions offsets
+        char.style.bottom = `${config.bottomOffset}px`;
+        char.style.zIndex = 50 + config.bottomOffset;
+        
+        char.innerHTML = `
+          <!-- Speech bubble overlay -->
+          <div class="speech-bubble" id="bubble-${config.id}"></div>
+          
+          <!-- Name Tag -->
+          <div class="name-tag-wrapper" style="--agent-color: ${config.color}">
+            <span class="status-dot char-status-dot ${config.status}" id="char-status-dot-${config.id}"></span>
+            <span class="name-tag">${config.name}</span>
+          </div>
+
+          <!-- Sprite wrapper with direct image reference -->
+          <div class="character-visual-box" style="--agent-color: ${config.color}">
+            <img class="sprite-img" src="./${config.filename}" alt="${config.name}">
+          </div>
+        `;
+        
+        // Hover listeners to pause walking and display task speech bubbles
+        char.addEventListener('mouseenter', () => {
+          showSpeechBubble(config.id, getRandomTask(config.id));
+        });
+        
+        char.addEventListener('mouseleave', () => {
+          hideSpeechBubble(config.id);
+        });
+
+        // Click character to toggle Active/Idle status
+        char.addEventListener('click', () => {
+          toggleAgentState(config.id);
+        });
+
+        track.appendChild(char);
+      });
+    }
+
+    // Toggle Active / Idle status
+    function toggleAgentState(agentId) {
+      const config = AGENTS_CONFIG[agentId];
+      const nextStatus = config.status === 'active' ? 'idle' : 'active';
+      config.status = nextStatus;
+      
+      // Update Agent Status Panel list values
+      const dot = document.getElementById(`status-dot-${agentId}`);
+      const txt = document.getElementById(`status-txt-${agentId}`);
+      if (dot) dot.className = `status-dot ${nextStatus}`;
+      if (txt) txt.innerText = nextStatus === 'active' ? 'active' : 'idle';
+      
+      // Update walk track element state & indicators
+      const charEl = document.getElementById(`agent-${agentId}`);
+      const charDot = document.getElementById(`char-status-dot-${agentId}`);
+      
+      if (charDot) charDot.className = `status-dot char-status-dot ${nextStatus}`;
+      
+      if (charEl) {
+        if (nextStatus === 'idle') {
+          charEl.classList.add('idle-state');
+          config.lastActivity = 'Idling standby.';
+        } else {
+          charEl.classList.remove('idle-state');
+          config.lastActivity = 'Resuming walk telemetry.';
+        }
+      }
+      
+      const actText = document.getElementById(`activity-text-${agentId}`);
+      if (actText) actText.innerText = config.lastActivity;
+
+      // Add log message to Team Chat terminal feed
+      const timeStr = getFormattedTime();
+      addTerminalChatLine('system', `Agent ${config.name} state: ${nextStatus.toUpperCase()}`, timeStr);
+    }
+
+    // Get random task of agent for hover display
+    function getRandomTask(agentId) {
+      const tasks = AGENTS_CONFIG[agentId].tasks;
+      return tasks[Math.floor(Math.random() * tasks.length)];
+    }
+
+    // Get random message of agent for chat trigger
+    function getRandomMessage(agentId) {
+      const msgs = AGENTS_CONFIG[agentId].messages;
+      return msgs[Math.floor(Math.random() * msgs.length)];
+    }
+
+    // ==========================================================================
+    // CHAT & LOGIC FEED ACTIONS
+    // ==========================================================================
+
+    // Display floating speech bubble (fades in 0.3s, stays 3s, fades out 0.5s)
+    function showSpeechBubble(agentId, message) {
+      const bubble = document.getElementById(`bubble-${agentId}`);
+      if (!bubble) return;
+
+      // Clear previous timeout
+      if (bubbleTimeouts[agentId]) {
+        clearTimeout(bubbleTimeouts[agentId]);
+        bubbleTimeouts[agentId] = null;
+      }
+
+      bubble.innerText = message;
+      bubble.classList.remove('fade-out');
+      bubble.classList.add('visible');
+
+      if (!activeBubbles.includes(agentId)) {
+        activeBubbles.push(agentId);
+      }
+
+      // Enforce max 2 bubbles on screen
+      if (activeBubbles.length > maxActiveBubbles) {
+        const oldestId = activeBubbles.shift();
+        hideSpeechBubble(oldestId);
+      }
+
+      // Stay for 3 seconds, then trigger fade-out
+      bubbleTimeouts[agentId] = setTimeout(() => {
+        hideSpeechBubble(agentId);
+      }, 3000);
+    }
+
+    // Hide speech bubble (triggers 0.5s fade out)
+    function hideSpeechBubble(agentId) {
+      const bubble = document.getElementById(`bubble-${agentId}`);
+      if (bubble) {
+        bubble.classList.remove('visible');
+        bubble.classList.add('fade-out');
+      }
+      activeBubbles = activeBubbles.filter(id => id !== agentId);
+      if (bubbleTimeouts[agentId]) {
+        clearTimeout(bubbleTimeouts[agentId]);
+        bubbleTimeouts[agentId] = null;
+      }
+    }
+
+    // Get formatted time string HH:MM:SS
+    function getFormattedTime() {
+      const now = new Date();
+      return now.toTimeString().split(' ')[0];
+    }
+
+    // Append chat lines to Terminal feed
+    function addTerminalChatLine(senderId, msg, timestamp) {
+      const feed = document.getElementById('terminal-feed');
+      if (!feed) return;
+
+      const chatLine = document.createElement('div');
+      chatLine.className = 'chat-line';
+
+      let senderName = 'SYSTEM';
+      let senderClass = 'sender-system';
+
+      if (senderId === 'user') {
+        senderName = 'OPERATOR';
+        senderClass = 'sender-user';
+      } else if (senderId !== 'system') {
+        senderName = AGENTS_CONFIG[senderId].name;
+        senderClass = `sender-${senderId}`;
+      }
+
+      chatLine.innerHTML = `
+        <span class="chat-time">[${timestamp}]</span>
+        <span class="chat-sender ${senderClass}">${senderName}:</span>
+        <span class="chat-msg">${msg}</span>
+      `;
+
+      feed.appendChild(chatLine);
+      feed.scrollTop = feed.scrollHeight; // Auto-scroll
+      
+      // Keep feed length constrained to 50 logs
+      while (feed.childNodes.length > 50) {
+        feed.removeChild(feed.firstChild);
+      }
+    }
+
+    // Auto dialogue chat ticker triggered every 7 seconds
+    function triggerAutoChat() {
+      // Pick random agent
+      const keys = Object.keys(AGENTS_CONFIG);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      const config = AGENTS_CONFIG[randomKey];
+      
+      // Active agents trigger dialogue
+      if (config.status === 'active') {
+        const msg = getRandomMessage(randomKey);
+        const timeStr = getFormattedTime();
+        
+        // Show dialogue bubble
+        showSpeechBubble(randomKey, msg);
+        
+        // Output to team chat terminal feed
+        addTerminalChatLine(randomKey, msg, timeStr);
+
+        // Update list status logs activity
+        const textEl = document.getElementById(`activity-text-${randomKey}`);
+        if (textEl) {
+          config.lastActivity = msg;
+          textEl.innerText = msg;
+        }
+
+        // Fluctuate stats data counters
+        fluctuateMetrics();
+      }
+    }
+
+    // Interactive console chat trigger
+    function handleChatSubmit(event) {
+      event.preventDefault();
+      const input = document.getElementById('terminal-input');
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const timeStr = getFormattedTime();
+      addTerminalChatLine('user', text, timeStr);
+      input.value = '';
+
+      // Mock interactive replies from Supervisor bot
+      setTimeout(() => {
+        const replyTime = getFormattedTime();
+        let reply = "Processing command...";
+        const norm = text.toLowerCase();
+        
+        if (norm.includes('status')) {
+          reply = "All subagents functional. Overall pipeline throughput 100%.";
+        } else if (norm.includes('active') || norm.includes('run')) {
+          reply = "Activating all standby bots.";
+          Object.keys(AGENTS_CONFIG).forEach(key => {
+            if (AGENTS_CONFIG[key].status !== 'active') {
+              toggleAgentState(key);
+            }
+          });
+        } else if (norm.includes('idle') || norm.includes('stop')) {
+          reply = "Setting active bots to standby mode.";
+          Object.keys(AGENTS_CONFIG).forEach(key => {
+            if (AGENTS_CONFIG[key].status === 'active') {
+              toggleAgentState(key);
+            }
+          });
+        } else if (norm.includes('clear')) {
+          document.getElementById('terminal-feed').innerHTML = '';
+          reply = "Log feed cleared.";
+        } else {
+          reply = "Command received. Syncing pipeline cache.";
+        }
+        
+        showSpeechBubble('supervisor', reply);
+        addTerminalChatLine('supervisor', reply, replyTime);
+      }, 700);
+    }
+
+    // Fluctuating values logic
+    function fluctuateMetrics() {
+      // Daily revenue fluctuation (฿)
+      const revEl = document.getElementById('metric-revenue');
+      let rev = parseFloat(revEl.innerText.replace('฿', '').replace(',', ''));
+      rev += (Math.random() * 20 + 2);
+      revEl.innerText = '฿' + rev.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      // Click Logged
+      const clickEl = document.getElementById('metric-clicks');
+      let clicks = parseInt(clickEl.innerText.replace(',', ''));
+      clicks += Math.floor(Math.random() * 8 + 1);
+      clickEl.innerText = clicks.toLocaleString();
+
+      // Posts published
+      if (Math.random() > 0.85) {
+        const postEl = document.getElementById('metric-posts');
+        let posts = parseInt(postEl.innerText);
+        posts += 1;
+        postEl.innerText = posts;
+
+        // Progress queued tasks list
+        cycleQueueTaskDynamically();
+      }
+
+      // Add point to performance SVG chart
+      const lastVal = chartPoints[chartPoints.length - 1];
+      let newVal = lastVal + (Math.random() * 16 - 8);
+      newVal = Math.max(10, Math.min(95, newVal));
+      
+      chartPoints.push(newVal);
+      if (chartPoints.length > maxChartPoints) {
+        chartPoints.shift();
+      }
+      updateLineChart();
+    }
+
+    // Cycle bottom left pipelines tasks list
+    function cycleQueueTaskDynamically() {
+      const runningTask = INITIAL_QUEUE_TASKS.find(t => t.status === 'running');
+      const pendingTask = INITIAL_QUEUE_TASKS.find(t => t.status === 'pending');
+
+      if (runningTask) {
+        runningTask.status = 'done';
+      }
+      if (pendingTask) {
+        pendingTask.status = 'running';
+        
+        // Spawn next pending task
+        const nextId = INITIAL_QUEUE_TASKS.length + 1;
+        INITIAL_QUEUE_TASKS.push({
+          id: nextId,
+          title: `Analyze Product Batch #${nextId}`,
+          time: getFormattedTime().slice(0, 5),
+          details: 'Scraping metrics for new affiliate target.',
+          status: 'pending'
+        });
+      }
+
+      if (INITIAL_QUEUE_TASKS.length > 5) {
+        INITIAL_QUEUE_TASKS.shift();
+      }
+
+      renderContentQueuePanel();
+    }
+  </script>
+</body>
+</html>
