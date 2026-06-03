@@ -460,7 +460,7 @@
     .agent-character {
       position: absolute;
       bottom: 0;
-      width: 80px;
+      width: 94px;
       height: 140px;
       cursor: pointer;
       pointer-events: auto;
@@ -496,7 +496,7 @@
 
     /* Sprite Wrapper */
     .character-visual-box {
-      width: 80px;
+      width: 94px;
       height: 140px;
       display: flex;
       justify-content: center;
@@ -508,19 +508,53 @@
       height: 140px;
       width: auto;
       object-fit: contain;
-      image-rendering: pixelated;
       transform-origin: bottom center;
       display: block;
     }
 
     /* CSS TranslateX walking cycles (position outer container, flip inner img) */
-    .walk-supervisor { animation: walk-pos-anim 26s linear infinite; animation-delay: 0s; }
-    .walk-productFinder { animation: walk-pos-anim 32s linear infinite; animation-delay: 1.5s; }
-    .walk-clipSelector { animation: walk-pos-anim 24s linear infinite; animation-delay: 3s; }
-    .walk-videoMaker { animation: walk-pos-anim 36s linear infinite; animation-delay: 2s; }
-    .walk-captionWriter { animation: walk-pos-anim 30s linear infinite; animation-delay: 4s; }
-    .walk-postAgent { animation: walk-pos-anim 20s linear infinite; animation-delay: 1s; }
-    .walk-analyticsAgent { animation: walk-pos-anim 34s linear infinite; animation-delay: 2.5s; }
+    .walk-supervisor { 
+      --walk-start: 0px; 
+      --walk-end: calc((100vw - 592px - 94px) * 0.6); 
+      animation: walk-pos-anim 26s linear infinite; 
+      animation-delay: 0s; 
+    }
+    .walk-productFinder { 
+      --walk-start: calc((100vw - 592px - 94px) * 0.2); 
+      --walk-end: calc((100vw - 592px - 94px) * 0.8); 
+      animation: walk-pos-anim 32s linear infinite; 
+      animation-delay: 1.5s; 
+    }
+    .walk-clipSelector { 
+      --walk-start: calc((100vw - 592px - 94px) * 0.05); 
+      --walk-end: calc((100vw - 592px - 94px) * 0.55); 
+      animation: walk-pos-anim 24s linear infinite; 
+      animation-delay: 3s; 
+    }
+    .walk-videoMaker { 
+      --walk-start: calc((100vw - 592px - 94px) * 0.35); 
+      --walk-end: calc((100vw - 592px - 94px) * 0.95); 
+      animation: walk-pos-anim 36s linear infinite; 
+      animation-delay: 2s; 
+    }
+    .walk-captionWriter { 
+      --walk-start: calc((100vw - 592px - 94px) * 0.1); 
+      --walk-end: calc((100vw - 592px - 94px) * 0.7); 
+      animation: walk-pos-anim 30s linear infinite; 
+      animation-delay: 4s; 
+    }
+    .walk-postAgent { 
+      --walk-start: calc((100vw - 592px - 94px) * 0.4); 
+      --walk-end: calc((100vw - 592px - 94px) * 1.0); 
+      animation: walk-pos-anim 20s linear infinite; 
+      animation-delay: 1s; 
+    }
+    .walk-analyticsAgent { 
+      --walk-start: calc((100vw - 592px - 94px) * 0.15); 
+      --walk-end: calc((100vw - 592px - 94px) * 0.85); 
+      animation: walk-pos-anim 34s linear infinite; 
+      animation-delay: 2.5s; 
+    }
 
     .walk-supervisor .sprite-img { animation: walk-flip-anim 26s linear infinite; animation-delay: 0s; }
     .walk-productFinder .sprite-img { animation: walk-flip-anim 32s linear infinite; animation-delay: 1.5s; }
@@ -539,9 +573,9 @@
     }
 
     @keyframes walk-pos-anim {
-      0% { transform: translateX(0); }
-      50% { transform: translateX(calc(100vw - 592px - 80px)); }
-      100% { transform: translateX(0); }
+      0% { transform: translateX(var(--walk-start, 0px)); }
+      50% { transform: translateX(var(--walk-end, calc(100vw - 592px - 94px))); }
+      100% { transform: translateX(var(--walk-start, 0px)); }
     }
     
     @keyframes walk-flip-anim {
